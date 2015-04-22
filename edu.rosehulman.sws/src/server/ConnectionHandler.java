@@ -71,8 +71,8 @@ public class ConnectionHandler implements Runnable {
 		OutputStream outStream = null;
 		
 		try {
-			inStream = this.socket.getInputStream();
-			outStream = this.socket.getOutputStream();
+			inStream = this.socket.getInputStream(); //for incoming requests
+			outStream = this.socket.getOutputStream(); //for outgoing responses
 		}
 		catch(Exception e) {
 			// Cannot do anything if we have exception reading input or output stream
@@ -139,8 +139,9 @@ public class ConnectionHandler implements Runnable {
 				// Here you checked that the "Protocol.VERSION" string is not equal to the  
 				// "request.version" string ignoring the case of the letters in both strings
 				// TODO: Fill in the rest of the code here
+				// 505!
 			}
-			else if(request.getMethod().equalsIgnoreCase(Protocol.GET)) {
+			else if(request.getMethod().equalsIgnoreCase(Protocol.GET)) { //If it is a GET request
 //				Map<String, String> header = request.getHeader();
 //				String date = header.get("if-modified-since");
 //				String hostName = header.get("host");

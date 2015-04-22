@@ -186,7 +186,7 @@ public class WebServer extends JFrame {
 				
 				// Now run the server in non-gui thread
 				server = new Server(rootDirectory, port, WebServer.this);
-				rateUpdater = new ServiceRateUpdater();
+				rateUpdater = new ServiceRateUpdater(); //# requests per second
 				
 				// Disable widgets
 				WebServer.this.disableWidgets();
