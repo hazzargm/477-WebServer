@@ -19,7 +19,9 @@
  * 
  */
  
-package protocol;
+package edu.rosehulman.sws.protocol;
+
+import edu.rosehulman.sws.impl.Protocol;
 
 /**
  * This class is used to represent exceptions in processing

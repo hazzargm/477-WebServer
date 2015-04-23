@@ -19,7 +19,7 @@
  * 
  */
  
-package protocol;
+package edu.rosehulman.sws.impl;
 
 /**
  * This class is a collection of HTTP protocol related constants, 

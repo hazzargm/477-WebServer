@@ -19,7 +19,7 @@
  * 
  */
 
-package gui;
+package edu.rosehulman.sws.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -30,7 +30,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
-import server.Server;
+import edu.rosehulman.sws.server.Server;
 
 /**
  * The application window for the {@link Server}, where you can update

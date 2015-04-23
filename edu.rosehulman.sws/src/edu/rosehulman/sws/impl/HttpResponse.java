@@ -19,7 +19,7 @@
  * 
  */
  
-package protocol;
+package edu.rosehulman.sws.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

@@ -19,18 +19,18 @@
  * 
  */
  
-package server;
+package edu.rosehulman.sws.server;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import protocol.HttpRequest;
-import protocol.HttpResponse;
-import protocol.HttpResponseFactory;
-import protocol.Protocol;
-import protocol.ProtocolException;
+import edu.rosehulman.sws.impl.HttpRequest;
+import edu.rosehulman.sws.impl.HttpResponse;
+import edu.rosehulman.sws.impl.HttpResponseFactory;
+import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.protocol.ProtocolException;
 
 /**
  * This class is responsible for handling a incoming request

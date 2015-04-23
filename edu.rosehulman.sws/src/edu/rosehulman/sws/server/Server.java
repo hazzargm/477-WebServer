@@ -19,9 +19,9 @@
  * 
  */
  
-package server;
+package edu.rosehulman.sws.server;
 
-import gui.WebServer;
+import edu.rosehulman.sws.gui.WebServer;
 
 import java.net.InetAddress;
 import java.net.ServerSocket;

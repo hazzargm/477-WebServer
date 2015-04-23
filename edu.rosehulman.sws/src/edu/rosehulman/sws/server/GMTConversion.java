@@ -1,4 +1,4 @@
-package server;
+package edu.rosehulman.sws.server;
 
 import java.text.DateFormat;
 import java.text.ParseException;
