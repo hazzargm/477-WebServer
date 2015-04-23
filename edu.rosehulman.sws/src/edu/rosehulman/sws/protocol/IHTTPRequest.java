@@ -28,9 +28,17 @@
  
 package edu.rosehulman.sws.protocol;
 
+import java.util.Map;
+
 /**
  * 
  */
 public interface IHTTPRequest {
 	public IHTTPResponse handleRequest();
+
+	public String getMethod();
+	public String getUri();
+	public String getVersion();
+	public char[] getBody();
+	public Map<String, String> getHeader();
 }

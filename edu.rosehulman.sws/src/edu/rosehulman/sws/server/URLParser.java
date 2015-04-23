@@ -35,7 +35,6 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import edu.rosehulman.sws.impl.HttpRequest;
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPRequests.GETRequest;
 import edu.rosehulman.sws.protocol.IHTTPRequest;

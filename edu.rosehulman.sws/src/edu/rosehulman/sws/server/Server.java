@@ -111,7 +111,7 @@ public class Server implements Runnable {
 
 	/**
 	 * The entry method for the main server thread that accepts incoming
-	 * TCP connection request and creates a {@link ConnectionHandler} for
+	 * TCP connection request and creates a {@link OldConnectionHandler} for
 	 * the request.
 	 */
 	public void run() {
