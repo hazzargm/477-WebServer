@@ -29,10 +29,21 @@
 package edu.rosehulman.sws.impl.HTTPRequests;
 
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
+import edu.rosehulman.sws.protocol.IHTTPResponse;
 
 /**
  * 
  */
 public class DELRequest extends AbstractHTTPRequest {
+
+	/* (non-Javadoc)
+	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
+	 */
+	@Override
+	public IHTTPResponse handleRequest() {
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
 
 }

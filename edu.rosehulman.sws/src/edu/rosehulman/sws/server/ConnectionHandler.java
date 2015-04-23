@@ -30,6 +30,8 @@ import edu.rosehulman.sws.impl.HttpRequest;
 import edu.rosehulman.sws.impl.HttpResponse;
 import edu.rosehulman.sws.impl.HttpResponseFactory;
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.protocol.IHTTPRequest;
+import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.protocol.ProtocolException;
 
 /**
@@ -43,10 +45,12 @@ import edu.rosehulman.sws.protocol.ProtocolException;
 public class ConnectionHandler implements Runnable {
 	private Server server;
 	private Socket socket;
+	private URLParser urlParser;
 	
 	public ConnectionHandler(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
+		this.urlParser = new URLParser();
 	}
 	
 	/**
@@ -89,26 +93,33 @@ public class ConnectionHandler implements Runnable {
 		
 		// At this point we have the input and output stream of the socket
 		// Now lets create a HttpRequest object
-		HttpRequest request = null;
-		HttpResponse response = null;
+		//Chandan's code: HttpRequest request1 = null; 
+		//Chandan's code: HttpResponse response = null;
+		IHTTPRequest request = null;
+		IHTTPResponse response = null;
 		try {
-			request = HttpRequest.read(inStream);
+			//Chandan's code: request1 = HttpRequest.read(inStream);
+			request = URLParser.parseIncomingRequest(inStream);
 			System.out.println(request);
 		}
-		catch(ProtocolException pe) {
+		catch(ProtocolException pe) { //TODO: We will likely handle this elsewhere
 			// We have some sort of protocol exception. Get its status code and create response
 			// We know only two kind of exception is possible inside fromInputStream
 			// Protocol.BAD_REQUEST_CODE and Protocol.NOT_SUPPORTED_CODE
 			int status = pe.getStatus();
 			if(status == Protocol.BAD_REQUEST_CODE) {
-				response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
+				//Chandan's code: response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
 			}
 			// TODO: Handle version not supported code as well
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			// For any other error, we will create bad request response as well
-			response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
+			//Chandan's code: response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
+		}
+		
+		if(request != null) {
+			response = request.handleRequest();
 		}
 		
 		if(response != null) {
@@ -129,26 +140,26 @@ public class ConnectionHandler implements Runnable {
 			this.server.incrementServiceTime(end-start);
 			return;
 		}
-		
+		/* TODO: This logic needs a new home :)
 		// We reached here means no error so far, so lets process further
 		try {
 			// Fill in the code to create a response for version mismatch.
 			// You may want to use constants such as Protocol.VERSION, Protocol.NOT_SUPPORTED_CODE, and more.
 			// You can check if the version matches as follows
-			if(!request.getVersion().equalsIgnoreCase(Protocol.VERSION)) {
+			if(!request1.getVersion().equalsIgnoreCase(Protocol.VERSION)) {
 				// Here you checked that the "Protocol.VERSION" string is not equal to the  
 				// "request.version" string ignoring the case of the letters in both strings
 				// TODO: Fill in the rest of the code here
 				// 505!
 			}
-			else if(request.getMethod().equalsIgnoreCase(Protocol.GET)) { //If it is a GET request
+			else if(request1.getMethod().equalsIgnoreCase(Protocol.GET)) { //If it is a GET request
 //				Map<String, String> header = request.getHeader();
 //				String date = header.get("if-modified-since");
 //				String hostName = header.get("host");
 //				
 				// Handling GET request here
 				// Get relative URI path from request
-				String uri = request.getUri();
+				String uri = request1.getUri();
 				// Get root directory path from server
 				String rootDirectory = server.getRootDirectory();
 				// Combine them together to form absolute file path
@@ -190,7 +201,7 @@ public class ConnectionHandler implements Runnable {
 		if(response == null) {
 			response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
 		}
-		
+		*/
 		try{
 			// Write response and we are all done so close the socket
 			response.write(outStream);

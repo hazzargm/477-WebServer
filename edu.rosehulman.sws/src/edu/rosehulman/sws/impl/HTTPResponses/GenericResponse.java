@@ -28,11 +28,22 @@
  
 package edu.rosehulman.sws.impl.HTTPResponses;
 
-import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
+import java.io.OutputStream;
+
+import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 
 /**
  * 
  */
-public class GenericResponse extends AbstractHTTPRequest {
+public class GenericResponse extends AbstractHTTPResponse {
+
+	/* (non-Javadoc)
+	 * @see edu.rosehulman.sws.protocol.IHTTPResponse#write(java.io.OutputStream)
+	 */
+	@Override
+	public void write(OutputStream outStream) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

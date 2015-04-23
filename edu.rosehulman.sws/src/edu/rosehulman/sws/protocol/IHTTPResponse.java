@@ -28,9 +28,16 @@
  
 package edu.rosehulman.sws.protocol;
 
+import java.io.OutputStream;
+
 /**
  * 
  */
 public interface IHTTPResponse {
+
+	/**
+	 * @param outStream
+	 */
+	public void write(OutputStream outStream);
 
 }

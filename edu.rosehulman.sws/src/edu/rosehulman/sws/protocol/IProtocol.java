@@ -29,7 +29,7 @@
 package edu.rosehulman.sws.protocol;
 
 /**
- * 
+ * TODO WE MAY NOT NEED/WANT THIS CLASS 
  */
 public interface IProtocol {
 

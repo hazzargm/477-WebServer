@@ -32,5 +32,5 @@ package edu.rosehulman.sws.protocol;
  * 
  */
 public interface IHTTPRequest {
-
+	public IHTTPResponse handleRequest();
 }
