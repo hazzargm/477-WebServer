@@ -58,9 +58,10 @@ public class GETRequest extends AbstractHTTPRequest {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
 		File file = lookup(server);
+		// Create type ErrorResponse and verify that the response is not an error
 		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
 		ReadAction readAction = new ReadAction(response, file);
-		readAction.performAction();
+		response = readAction.performAction();
 		try {
 			response.write(outStream);
 			// Increment number of connections by 1

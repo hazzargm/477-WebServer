@@ -51,9 +51,6 @@ public class ReadAction extends AbstractRequestAction {
 	
 	@Override
 	public IHTTPResponse performAction() {				
-//				HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 
-//				Protocol.OK_TEXT, new HashMap<String, String>(), file);
-		
 		// Lets fill up header fields with more information
 		response.fillGeneralHeader(Protocol.CLOSE);
 		// Lets add last modified date for the file
