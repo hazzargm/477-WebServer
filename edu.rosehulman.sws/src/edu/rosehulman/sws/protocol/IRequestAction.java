@@ -33,4 +33,5 @@ package edu.rosehulman.sws.protocol;
  */
 public interface IRequestAction {
 
+	public abstract IHTTPResponse performAction();
 }

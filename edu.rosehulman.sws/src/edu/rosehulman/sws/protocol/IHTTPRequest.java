@@ -28,13 +28,18 @@
  
 package edu.rosehulman.sws.protocol;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.util.Map;
+
+import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
-public interface IHTTPRequest {
-	public IHTTPResponse handleRequest();
+public interface IHTTPRequest {	
+	public abstract void handleRequest(Server server, OutputStream outStream, long start);
+	public File lookup(Server server);
 
 	public String getMethod();
 	public String getUri();

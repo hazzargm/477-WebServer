@@ -37,7 +37,19 @@ public interface IHTTPResponse {
 
 	/**
 	 * @param outStream
+	 * @throws Exception 
 	 */
-	public void write(OutputStream outStream);
+	public void write(OutputStream outStream) throws Exception;
+
+	/**
+	 * @param contentType
+	 * @param mime
+	 */
+	public void put(String contentType, String mime);
+
+	/**
+	 * @param close
+	 */
+	public void fillGeneralHeader(String close);
 
 }

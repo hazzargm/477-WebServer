@@ -28,21 +28,25 @@
  
 package edu.rosehulman.sws.protocol;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
 public abstract class AbstractHTTPRequest implements IHTTPRequest {
-	private String method;
-	private String uri;
-	private String version;
-	private Map<String, String> header;
-	private char[] body;
+	protected String method;
+	protected String uri;
+	protected String version;
+	protected Map<String, String> header;
+	protected char[] body;
+	
+	protected IHTTPResponse response;
 	
 	public AbstractHTTPRequest() {
 		this.header = new HashMap<String, String>();
@@ -89,7 +93,41 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		return Collections.unmodifiableMap(header);
 	}
 	
-	public abstract IHTTPResponse handleRequest();
+	public File lookup(Server server) {
+		// Get root directory path from server
+		String rootDirectory = server.getRootDirectory();
+		// Combine them together to form absolute file path
+		File file = new File(rootDirectory + uri);
+		// Check if the file exists
+		if(file.exists()) {
+			if(file.isDirectory()) {
+				// Look for default index.html file in a directory
+				String location = rootDirectory + uri + System.getProperty("file.separator") + Protocol.DEFAULT_FILE;
+				file = new File(location);
+				if(file.exists()) {
+					return file;
+				}
+				else {
+					// File does not exist so lets create 404 file not found code
+					//TODO: response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+				}
+			}
+			else { // Its a file
+				return file;
+			}
+		}
+		else {
+//			// File does not exist so lets create 404 file not found code
+			//TODO: response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+		}
+	
+
+//catch(Exception e) {
+//	e.printStackTrace();
+//}
+		return null;
+		
+	}
 	
 	@Override
 	public String toString() {

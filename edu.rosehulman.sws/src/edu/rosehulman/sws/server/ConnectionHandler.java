@@ -43,12 +43,10 @@ import edu.rosehulman.sws.protocol.ProtocolException;
 public class ConnectionHandler implements Runnable {
 	private Server server;
 	private Socket socket;
-	private URLParser urlParser;
 
 	public ConnectionHandler(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
-		this.urlParser = new URLParser();
 	}
 
 	/**
@@ -74,6 +72,7 @@ public class ConnectionHandler implements Runnable {
 		try {
 			inStream = this.socket.getInputStream(); // for incoming requests
 			outStream = this.socket.getOutputStream(); // for outgoing responses
+			
 		} catch (Exception e) {
 			// Cannot do anything if we have exception reading input or output
 			// stream
@@ -91,7 +90,6 @@ public class ConnectionHandler implements Runnable {
 		// At this point we have the input and output stream of the socket
 		// Now lets create a HttpRequest object
 		IHTTPRequest request = null;
-		IHTTPResponse response = null;
 		try {
 			// Chandan's code: request1 = HttpRequest.read(inStream);
 			request = URLParser.parseIncomingRequest(inStream);
@@ -116,42 +114,8 @@ public class ConnectionHandler implements Runnable {
 			// HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
 		}
 		if (request != null) {
-			response = request.handleRequest();
+			request.handleRequest(server, outStream, start); //TODO
 		}
 
-		if (response != null) {
-			// Means there was an error, now write the response object to the
-			// socket
-			try {
-				response.write(outStream);
-				System.out.println(response);
-			} catch (Exception e) {
-				// We will ignore this exception
-				e.printStackTrace();
-			}
-
-			// Increment number of connections by 1
-			server.incrementConnections(1);
-			// Get the end time
-			long end = System.currentTimeMillis();
-			this.server.incrementServiceTime(end - start);
-			return;
-		}
-
-		try {
-			// Write response and we are all done so close the socket
-			response.write(outStream);
-			System.out.println(response);
-			socket.close();
-		} catch (Exception e) {
-			// We will ignore this exception
-			e.printStackTrace();
-		}
-
-		// Increment number of connections by 1
-		server.incrementConnections(1);
-		// Get the end time
-		long end = System.currentTimeMillis();
-		this.server.incrementServiceTime(end - start);
 	}
 }

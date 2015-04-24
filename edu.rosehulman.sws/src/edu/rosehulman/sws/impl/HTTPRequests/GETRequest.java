@@ -28,21 +28,48 @@
  
 package edu.rosehulman.sws.impl.HTTPRequests;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.util.Map;
+
+import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
+import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
 public class GETRequest extends AbstractHTTPRequest {
+	
+	public GETRequest(String uri, String version, Map<String,String> header) {
+		this.uri = uri;
+		this.version = version;
+		this.header = header;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
 	 */
 	@Override
-	public IHTTPResponse handleRequest() {
-		return null;
-		// TODO Auto-generated method stub
-		
+	public void handleRequest(Server server, OutputStream outStream, long start) {
+		String date = header.get("if-modified-since"); //TODO: put in protocol
+		String hostName = header.get("host"); //TODO: put in protocol
+		File file = lookup(server);
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		ReadAction readAction = new ReadAction(response, file);
+		readAction.performAction();
+		try {
+			response.write(outStream);
+			// Increment number of connections by 1
+			server.incrementConnections(1);
+			// Get the end time
+			long end = System.currentTimeMillis();
+			server.incrementServiceTime(end - start);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -28,9 +28,13 @@
  
 package edu.rosehulman.sws.protocol;
 
+import java.io.File;
+
 /**
  * 
  */
 public abstract class AbstractRequestAction implements IRequestAction {
+	protected IHTTPResponse response;
+	protected File file;
 
 }

@@ -29,10 +29,20 @@
 package edu.rosehulman.sws.impl.RequestActions;
 
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
+import edu.rosehulman.sws.protocol.IHTTPResponse;
 
 /**
  * 
  */
 public class WriteAction extends AbstractRequestAction {
+
+	/* (non-Javadoc)
+	 * @see edu.rosehulman.sws.protocol.IRequestAction#performAction()
+	 */
+	@Override
+	public IHTTPResponse performAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

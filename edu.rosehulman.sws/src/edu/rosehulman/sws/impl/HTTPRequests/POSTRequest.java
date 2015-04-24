@@ -28,8 +28,11 @@
  
 package edu.rosehulman.sws.impl.HTTPRequests;
 
+import java.io.OutputStream;
+
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.server.Server;
 
 /**
  * 
@@ -40,8 +43,7 @@ public class POSTRequest extends AbstractHTTPRequest {
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
 	 */
 	@Override
-	public IHTTPResponse handleRequest() {
-		return null;
+	public void handleRequest(Server server, OutputStream outStream, long start) {
 		// TODO Auto-generated method stub
 		
 	}
