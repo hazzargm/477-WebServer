@@ -28,8 +28,14 @@
  
 package edu.rosehulman.sws.impl.HTTPRequests;
 
+import java.io.File;
 import java.io.OutputStream;
+import java.util.Map;
 
+import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
+import edu.rosehulman.sws.impl.RequestActions.ReadAction;
+import edu.rosehulman.sws.impl.RequestActions.WriteAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
@@ -38,14 +44,35 @@ import edu.rosehulman.sws.server.Server;
  * 
  */
 public class POSTRequest extends AbstractHTTPRequest {
+	
+	public POSTRequest(String uri, String version, Map<String,String> header) {
+		this.uri = uri;
+		this.version = version;
+		this.header = header;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
 	 */
 	@Override
 	public void handleRequest(Server server, OutputStream outStream, long start) {
-		// TODO Auto-generated method stub
-		
+		String date = header.get("if-modified-since"); //TODO: put in protocol
+		String hostName = header.get("host"); //TODO: put in protocol
+		File file = lookup(server);
+		// Create type ErrorResponse and verify that the response is not an error
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		WriteAction writeAction = new WriteAction(response, file, this.body);
+		response = writeAction.performAction();
+		try {
+			response.write(outStream);
+			// Increment number of connections by 1
+			server.incrementConnections(1);
+			// Get the end time
+			long end = System.currentTimeMillis();
+			server.incrementServiceTime(end - start);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

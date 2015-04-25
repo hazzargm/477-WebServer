@@ -28,6 +28,14 @@
  
 package edu.rosehulman.sws.impl.RequestActions;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.FileNameMap;
+import java.net.URLConnection;
+import java.util.Date;
+
+import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 
@@ -35,14 +43,39 @@ import edu.rosehulman.sws.protocol.IHTTPResponse;
  * 
  */
 public class WriteAction extends AbstractRequestAction {
+	private char[] body;
 
-	/* (non-Javadoc)
-	 * @see edu.rosehulman.sws.protocol.IRequestAction#performAction()
-	 */
+	public WriteAction(IHTTPResponse response, File file, char[] body) {
+		this.response = response;
+		this.file = file;
+		this.body = body;
+	}
+	
 	@Override
 	public IHTTPResponse performAction() {
-		// TODO Auto-generated method stub
-		return null;
+		// Then create new file
+		try {
+			this.file.createNewFile();
+			// false so it overwrites existing file
+			 FileWriter fw = new FileWriter(this.file,false);
+             fw.write(this.body);
+             fw.close();
+             System.out.println("FILE WRITE PATH: " + this.file.getAbsolutePath());
+             System.out.println("FILE WRITE CONTENT: " + this.body.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Lets fill up header fields with more information
+		response.fillGeneralHeader(Protocol.CLOSE);
+		// Lets add last modified date for the file
+		long timeSinceEpoch = file.lastModified();
+		Date modifiedTime = new Date(timeSinceEpoch);
+		response.put(Protocol.LAST_MODIFIED, modifiedTime.toString());
+		
+		System.out.println(response);
+		return response;
 	}
 
 }

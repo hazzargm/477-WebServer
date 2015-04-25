@@ -32,8 +32,9 @@
 package edu.rosehulman.sws.gui;
 
 import javax.swing.*;
-import javax.swing.SpringLayout;
+
 import java.awt.*;
+import java.io.File;
 
 /**
  * A 1.4 file that provides utility methods for
@@ -50,6 +51,13 @@ public class SpringUtilities {
         System.out.println("minimumSize = " + c.getMinimumSize());
         System.out.println("preferredSize = " + c.getPreferredSize());
         System.out.println("maximumSize = " + c.getMaximumSize());
+    }
+    
+    public static String combine (String path1, String path2)
+    {
+        File file1 = new File(path1);
+        File file2 = new File(file1, path2);
+        return file2.getPath();
     }
 
     /**

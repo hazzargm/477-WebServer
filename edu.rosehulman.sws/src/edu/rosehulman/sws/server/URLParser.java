@@ -125,7 +125,7 @@ public class URLParser {
 		switch(method) {
 			case Protocol.GET: return new GETRequest(uri, version, header);
 			case Protocol.DELETE: return new DELRequest();
-			case Protocol.POST: return new POSTRequest();
+			case Protocol.POST: return new POSTRequest(uri, version, header);
 			case Protocol.PUT: return new PUTRequest();
 			default: return null;
 		}		
