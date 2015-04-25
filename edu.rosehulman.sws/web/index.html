@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title>Test Page</title>
+</head>
+<body>
+	<p>Test Page Successful!</p>
+	
+	<input id='method' type='text' placeholder='Form Method (i.e. post, put)' value='put' />
+	<button onclick="changeFormMethod();">Change Method</button>
+	
+    <form id='form' action="/" method="put"  enctype="multipart/form-data">
+        <label for="file">Filename:</label>
+        <input type="file" name="file" id="file"><br>
+        <input type="submit" name="submit" value="Submit">
+    </form>
+    
+    <script>
+    	function changeFormMethod() {
+    		var method = document.getElementById('method').value;
+    		document.getElementById('form').method = method;
+    	}
+    </script>
+</html>
+</body>
+</html>
