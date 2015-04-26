@@ -36,6 +36,7 @@ import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
+import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
 
@@ -58,9 +59,9 @@ public class GETRequest extends AbstractHTTPRequest {
 	public void handleRequest(Server server, OutputStream outStream, long start) {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
-		File file = lookup(server);
+		File file = lookup(server, false, null);
 		// Create type ErrorResponse and verify that the response is not an error
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		AbstractHTTPResponse response = new Response200OK(Protocol.VERSION, file);
 		ReadAction readAction = new ReadAction(response, file);
 		response = readAction.performAction();
 		try {

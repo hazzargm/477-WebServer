@@ -29,6 +29,7 @@
 package edu.rosehulman.sws.protocol;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,14 +97,24 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		return Collections.unmodifiableMap(header);
 	}
 
-	public File lookup(Server server) {
+	public File lookup(Server server, boolean ensureFileCreation, String fileName) {
 		// Get root directory path from server
 		String rootDirectory = server.getRootDirectory();
+		
+		// normalize optional filename
+		if (fileName == null) {
+			fileName = "";
+		} else {
+			fileName = File.separator + fileName;
+		}
+		
 		// Combine them together to form absolute file path
-		File file = new File(SpringUtilities.combine(rootDirectory, uri));
+		File file = new File(SpringUtilities.combine(rootDirectory, uri) + fileName);
 		System.out.println("ROOT" + rootDirectory);
 		System.out.println("URI --- " + uri);
 		System.out.println("PATH --- " + file.getAbsolutePath());
+		
+		
 		// Check if the file exists
 		if (file.exists()) {
 			System.out.println("LOOKUP: Found File");
@@ -124,7 +135,18 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 			} else { // Its a file
 				return file;
 			}
+		} else if (ensureFileCreation) {
+			// check if should create file
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return file;
 		} else {
+			
+
 			System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
 			// // File does not exist so lets create 404 file not found code
 			// TODO: response =

@@ -37,7 +37,7 @@ import edu.rosehulman.sws.server.Server;
  * 
  */
 public abstract class AbstractRequestAction implements IRequestAction {
-	protected IHTTPResponse response;
+	protected AbstractHTTPResponse response;
 	protected File file;
 	protected char[] body;
 	protected String uri;
@@ -45,7 +45,7 @@ public abstract class AbstractRequestAction implements IRequestAction {
 
 	protected char[] getFileBody() { //TODO: currently this cuts off the last line of the body if it is a blank line
 		String bodyString = charArrayToString(body, 0);
-//		System.out.println("##############" + bodyString + "##############\n");
+		System.out.println("##############" + bodyString + "##############\n");
 		String[] lines = bodyString.split(System.getProperty("line.separator"));
 		int index = 4;
 		bodyString = "";

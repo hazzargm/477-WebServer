@@ -39,7 +39,7 @@ import edu.rosehulman.sws.server.Server;
  */
 public interface IHTTPRequest {	
 	public abstract void handleRequest(Server server, OutputStream outStream, long start);
-	public File lookup(Server server);
+	public File lookup(Server server, boolean ensureFileCreation, String filename);
 
 	public String getMethod();
 	public String getUri();

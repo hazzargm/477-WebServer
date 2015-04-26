@@ -25,61 +25,51 @@
  * NY 13699-5722
  * http://clarkson.edu/~rupakhcr
  */
- 
+
 package edu.rosehulman.sws.impl.RequestActions;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 import java.util.Date;
 
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
 public class WriteAction extends AbstractRequestAction {
+	private boolean shouldAppend;
 
-	public WriteAction(IHTTPResponse response, Server server, char[] body, String uri) {
+	public WriteAction(AbstractHTTPResponse response, Server server, char[] body, String uri, boolean shouldAppend) {
 		this.response = response;
 		this.server = server;
-		this.body = body;
 		this.uri = uri;
+		this.body = body;
+		this.shouldAppend = shouldAppend;
 	}
-	
+
 	@Override
-	public IHTTPResponse performAction() {
+	public AbstractHTTPResponse performAction() {
 		// Then create new file
 		try {
-			
-			//TODO: This stuff still needs to be done
-			File newFile = new File(server.getRootDirectory() + uri);
-			System.out.println("path: " + newFile.getAbsolutePath());
-			System.out.println("exists: " + newFile.exists());
-			getFileBody(); //TODO CHANGE ME
-			// false so it overwrites existing file
-			 FileWriter fw = new FileWriter(newFile,false);
-             fw.write(this.body);
-             fw.close();
-             System.out.println("FILE WRITE PATH: " + newFile.getAbsolutePath());
-             System.out.println("FILE WRITE CONTENT: ");
-             for(char c : body) {
-            	 System.out.print(c);
-             }
-             System.out.println();
+			File newFile = this.response.getFile();
 
-		
-		// Lets fill up header fields with more information
-		response.fillGeneralHeader(Protocol.CLOSE);
-		// Lets add last modified date for the file
-		long timeSinceEpoch = newFile.lastModified();
-		Date modifiedTime = new Date(timeSinceEpoch);
-		response.put(Protocol.LAST_MODIFIED, modifiedTime.toString());
+			String fileBody = new String(getFileBody());
+			FileWriter fw = new FileWriter(newFile, this.shouldAppend);
+			fw.write(fileBody);
+			fw.close();
+
+			// Lets fill up header fields with more information
+			response.fillGeneralHeader(Protocol.CLOSE);
+			// Lets add last modified date for the file
+			long timeSinceEpoch = newFile.lastModified();
+			Date modifiedTime = new Date(timeSinceEpoch);
+			response.put(Protocol.LAST_MODIFIED, modifiedTime.toString());
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

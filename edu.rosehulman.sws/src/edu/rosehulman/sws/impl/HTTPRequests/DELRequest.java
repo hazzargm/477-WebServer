@@ -28,11 +28,17 @@
  
 package edu.rosehulman.sws.impl.HTTPRequests;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
+import edu.rosehulman.sws.impl.RequestActions.DeleteAction;
+import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
+import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
 
@@ -53,8 +59,31 @@ public class DELRequest extends AbstractHTTPRequest {
 	 */
 	@Override
 	public void handleRequest(Server server, OutputStream outStream, long start) {
-		// TODO Auto-generated method stub
+		String date = header.get("if-modified-since"); //TODO: put in protocol
+		String hostName = header.get("host"); //TODO: put in protocol
 		
+		File file = lookup(server, false, null);
+		// Create type ErrorResponse and verify that the response is not an error
+		File responseFile = null;
+		try {
+			responseFile = File.createTempFile("response", "temp");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		AbstractHTTPResponse response = new Response200OK(Protocol.VERSION, responseFile);
+		DeleteAction deleteAction = new DeleteAction(response, file);
+		response = deleteAction.performAction();
+		try {
+			response.write(outStream);
+			// Increment number of connections by 1
+			server.incrementConnections(1);
+			// Get the end time
+			long end = System.currentTimeMillis();
+			server.incrementServiceTime(end - start);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

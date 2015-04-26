@@ -146,7 +146,7 @@ public class URLParser {
 			fillBodyHeader();
 			return new POSTRequest(uri, version, header, body, bodyHeader);
 		case Protocol.PUT:
-			return new PUTRequest(uri, version, header); //TODO may need to add fields
+			return new PUTRequest(uri, version, header, body, bodyHeader);
 		default:
 			return null;
 		}

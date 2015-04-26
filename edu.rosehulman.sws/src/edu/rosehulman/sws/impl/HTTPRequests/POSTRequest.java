@@ -38,6 +38,7 @@ import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.impl.RequestActions.WriteAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
+import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
 
@@ -62,10 +63,14 @@ public class POSTRequest extends AbstractHTTPRequest {
 	public void handleRequest(Server server, OutputStream outStream, long start) {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
-		File file = lookup(server);
+		String fileName = this.bodyHeader.get("filename");
+		
 		// Create type ErrorResponse and verify that the response is not an error
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
-		WriteAction writeAction = new WriteAction(response, server, this.body, this.uri);
+		File file = lookup(server, true, fileName);
+		AbstractHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		
+		// pass in false so that file is overwritten
+		WriteAction writeAction = new WriteAction(response, server, this.body, this.uri, false);
 		response = writeAction.performAction();
 		try {
 			response.write(outStream);
