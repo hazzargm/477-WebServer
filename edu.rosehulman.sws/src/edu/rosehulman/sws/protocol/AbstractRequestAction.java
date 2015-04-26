@@ -25,10 +25,13 @@
  * NY 13699-5722
  * http://clarkson.edu/~rupakhcr
  */
- 
+
 package edu.rosehulman.sws.protocol;
 
 import java.io.File;
+import java.io.Reader;
+
+import edu.rosehulman.sws.server.Server;
 
 /**
  * 
@@ -36,5 +39,36 @@ import java.io.File;
 public abstract class AbstractRequestAction implements IRequestAction {
 	protected IHTTPResponse response;
 	protected File file;
+	protected char[] body;
+	protected String uri;
+	protected Server server;
 
+	protected char[] getFileBody() { //TODO: currently this cuts off the last line of the body if it is a blank line
+		String bodyString = charArrayToString(body, 0);
+//		System.out.println("##############" + bodyString + "##############\n");
+		String[] lines = bodyString.split(System.getProperty("line.separator"));
+		int index = 4;
+		bodyString = "";
+		while(index < lines.length - 1) {
+			if(index == lines.length - 2) { //The last line so don't add line separator
+				bodyString += lines[index];
+			} else {
+				bodyString += lines[index] + System.getProperty("line.separator");
+			}
+			index++;
+		}
+//		System.out.println("$$$$$$$$$$$$$$");
+//		System.out.print(bodyString);
+//		System.out.println("$$$$$$$$$$$$$$");
+		char[] fileBody = bodyString.toCharArray();
+		return fileBody;
+	}
+
+	private String charArrayToString(char[] array, int start) {
+		String s = "";
+		for (int index = start; index < array.length; index++) {
+			s += array[index];
+		}
+		return s;
+	}
 }

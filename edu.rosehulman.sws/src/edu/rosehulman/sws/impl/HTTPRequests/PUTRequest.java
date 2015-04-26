@@ -29,7 +29,9 @@
 package edu.rosehulman.sws.impl.HTTPRequests;
 
 import java.io.OutputStream;
+import java.util.Map;
 
+import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
@@ -38,6 +40,13 @@ import edu.rosehulman.sws.server.Server;
  * 
  */
 public class PUTRequest extends AbstractHTTPRequest {
+	
+	public PUTRequest(String uri, String version, Map<String,String> header) {
+		this.method = Protocol.PUT;
+		this.uri = uri;
+		this.version = version;
+		this.header = header;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()

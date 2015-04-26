@@ -72,6 +72,13 @@ public class Protocol {
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String CONTENT_TYPE = "Content-Type";
     
+    // Some useful header elements in body
+    public static final String CONTENT_DISPOSITION = "Content-Disposition";
+    public static final String BODY_NAME = "name";
+    public static final String BODY_FILENAME = "filename";
+    public static final String BODY_BOUNDARY = "boundary";
+    
+    
     /**
      * A chunk size to be used when reading a file and sending it to a socket. 
      * Rather than reading the whole file at once, we divide the reading of the file

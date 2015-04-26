@@ -30,6 +30,7 @@ package edu.rosehulman.sws.impl.HTTPRequests;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import edu.rosehulman.sws.impl.Protocol;
@@ -45,10 +46,13 @@ import edu.rosehulman.sws.server.Server;
  */
 public class POSTRequest extends AbstractHTTPRequest {
 	
-	public POSTRequest(String uri, String version, Map<String,String> header) {
+	public POSTRequest(String uri, String version, Map<String,String> header, char[] body, Map<String, String> bodyHeader) {
+		this.method = Protocol.POST;
 		this.uri = uri;
 		this.version = version;
 		this.header = header;
+		this.body = body;
+		this.bodyHeader = bodyHeader;
 	}
 
 	/* (non-Javadoc)
@@ -61,7 +65,7 @@ public class POSTRequest extends AbstractHTTPRequest {
 		File file = lookup(server);
 		// Create type ErrorResponse and verify that the response is not an error
 		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
-		WriteAction writeAction = new WriteAction(response, file, this.body);
+		WriteAction writeAction = new WriteAction(response, server, this.body, this.uri);
 		response = writeAction.performAction();
 		try {
 			response.write(outStream);

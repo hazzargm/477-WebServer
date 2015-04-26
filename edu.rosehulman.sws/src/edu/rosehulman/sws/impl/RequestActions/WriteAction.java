@@ -38,42 +38,52 @@ import java.util.Date;
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
 public class WriteAction extends AbstractRequestAction {
-	private char[] body;
 
-	public WriteAction(IHTTPResponse response, File file, char[] body) {
+	public WriteAction(IHTTPResponse response, Server server, char[] body, String uri) {
 		this.response = response;
-		this.file = file;
+		this.server = server;
 		this.body = body;
+		this.uri = uri;
 	}
 	
 	@Override
 	public IHTTPResponse performAction() {
 		// Then create new file
 		try {
-			this.file.createNewFile();
+			
+			//TODO: This stuff still needs to be done
+			File newFile = new File(server.getRootDirectory() + uri);
+			System.out.println("path: " + newFile.getAbsolutePath());
+			System.out.println("exists: " + newFile.exists());
+			getFileBody(); //TODO CHANGE ME
 			// false so it overwrites existing file
-			 FileWriter fw = new FileWriter(this.file,false);
+			 FileWriter fw = new FileWriter(newFile,false);
              fw.write(this.body);
              fw.close();
-             System.out.println("FILE WRITE PATH: " + this.file.getAbsolutePath());
-             System.out.println("FILE WRITE CONTENT: " + this.body.toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+             System.out.println("FILE WRITE PATH: " + newFile.getAbsolutePath());
+             System.out.println("FILE WRITE CONTENT: ");
+             for(char c : body) {
+            	 System.out.print(c);
+             }
+             System.out.println();
+
 		
 		// Lets fill up header fields with more information
 		response.fillGeneralHeader(Protocol.CLOSE);
 		// Lets add last modified date for the file
-		long timeSinceEpoch = file.lastModified();
+		long timeSinceEpoch = newFile.lastModified();
 		Date modifiedTime = new Date(timeSinceEpoch);
 		response.put(Protocol.LAST_MODIFIED, modifiedTime.toString());
-		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println(response);
 		return response;
 	}

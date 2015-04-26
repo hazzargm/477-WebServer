@@ -25,7 +25,7 @@
  * NY 13699-5722
  * http://clarkson.edu/~rupakhcr
  */
- 
+
 package edu.rosehulman.sws.protocol;
 
 import java.io.File;
@@ -46,14 +46,15 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 	protected String version;
 	protected Map<String, String> header;
 	protected char[] body;
-	
+	protected Map<String, String> bodyHeader;
+
 	protected IHTTPResponse response;
-	
+
 	public AbstractHTTPRequest() {
 		this.header = new HashMap<String, String>();
 		this.body = new char[0];
 	}
-	
+
 	/**
 	 * The request method.
 	 * 
@@ -71,19 +72,20 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 	public String getUri() {
 		return uri;
 	}
-	
+
 	/**
 	 * The version of the http request.
+	 * 
 	 * @return the version
 	 */
 	public String getVersion() {
 		return version;
 	}
-	
+
 	public char[] getBody() {
 		return body;
 	}
-	
+
 	/**
 	 * The key to value mapping in the request header fields.
 	 * 
@@ -93,7 +95,7 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		// Lets return the unmodifable view of the header map
 		return Collections.unmodifiableMap(header);
 	}
-	
+
 	public File lookup(Server server) {
 		// Get root directory path from server
 		String rootDirectory = server.getRootDirectory();
@@ -103,38 +105,53 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		System.out.println("URI --- " + uri);
 		System.out.println("PATH --- " + file.getAbsolutePath());
 		// Check if the file exists
-		if(file.exists()) {
+		if (file.exists()) {
 			System.out.println("LOOKUP: Found File");
-			if(file.isDirectory()) {
+			if (file.isDirectory()) {
 				// Look for default index.html file in a directory
-				String location = rootDirectory + uri + System.getProperty("file.separator") + Protocol.DEFAULT_FILE;
+				String location = rootDirectory + uri
+						+ System.getProperty("file.separator")
+						+ Protocol.DEFAULT_FILE;
 				file = new File(location);
-				if(file.exists()) {
+				if (file.exists()) {
 					return file;
+				} else {
+					// File does not exist so lets create 404 file not found
+					// code
+					// TODO: response =
+					// HttpResponseFactory.create404NotFound(Protocol.CLOSE);
 				}
-				else {
-					// File does not exist so lets create 404 file not found code
-					//TODO: response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
-				}
-			}
-			else { // Its a file
+			} else { // Its a file
 				return file;
 			}
-		}
-		else {
+		} else {
 			System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
-//			// File does not exist so lets create 404 file not found code
-			//TODO: response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+			// // File does not exist so lets create 404 file not found code
+			// TODO: response =
+			// HttpResponseFactory.create404NotFound(Protocol.CLOSE);
 		}
-	
 
-//catch(Exception e) {
-//	e.printStackTrace();
-//}
+		// catch(Exception e) {
+		// e.printStackTrace();
+		// }
 		return null;
-		
+
 	}
+
+
 	
+//	protected void printHeaderValuesOnly() {
+//		for(String s : header.keySet()){
+//			System.out.println("{key:"+ s + "} ->" + "{value:"+ header.get(s)+"}");
+//		}
+//	}
+//	
+//	protected void printBodyHeaderValuesOnly() {
+//		for(String s : bodyHeader.keySet()){
+//			System.out.println("{key:"+ s + "} ->" + "{value:"+ bodyHeader.get(s)+"}");
+//		}
+//	}
+
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
@@ -145,8 +162,8 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		buffer.append(Protocol.SPACE);
 		buffer.append(this.version);
 		buffer.append(Protocol.LF);
-		
-		for(Map.Entry<String, String> entry : this.header.entrySet()) {
+
+		for (Map.Entry<String, String> entry : this.header.entrySet()) {
 			buffer.append(entry.getKey());
 			buffer.append(Protocol.SEPERATOR);
 			buffer.append(Protocol.SPACE);

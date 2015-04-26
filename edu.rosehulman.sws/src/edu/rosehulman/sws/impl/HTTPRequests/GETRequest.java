@@ -45,6 +45,7 @@ import edu.rosehulman.sws.server.Server;
 public class GETRequest extends AbstractHTTPRequest {
 	
 	public GETRequest(String uri, String version, Map<String,String> header) {
+		this.method = Protocol.GET;
 		this.uri = uri;
 		this.version = version;
 		this.header = header;

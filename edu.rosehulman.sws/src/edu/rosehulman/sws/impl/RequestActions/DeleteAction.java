@@ -28,6 +28,8 @@
  
 package edu.rosehulman.sws.impl.RequestActions;
 
+import java.io.File;
+
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 
@@ -35,14 +37,20 @@ import edu.rosehulman.sws.protocol.IHTTPResponse;
  * 
  */
 public class DeleteAction extends AbstractRequestAction {
+	
+	public DeleteAction(IHTTPResponse response, File file, String uri) {
+		this.response = response;
+		this.file = file;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.rosehulman.sws.protocol.IRequestAction#performAction()
 	 */
 	@Override
 	public IHTTPResponse performAction() {
-		// TODO Auto-generated method stub
-		return null;
+		this.file.delete();
+		//TODO: Update the response....
+		return response;
 	}
 
 }
