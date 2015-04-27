@@ -45,10 +45,38 @@ import edu.rosehulman.sws.impl.Protocol;
 public abstract class AbstractHTTPResponse implements IHTTPResponse {
 
 	protected String version;
-	protected int status;
+	protected int code;
 	protected String phrase;
 	protected Map<String, String> header;
 	protected File file;
+	
+	public static File createTempResponseFile() {
+		File tempFile = null;
+		try {
+			tempFile = File.createTempFile("response", "temp");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tempFile;
+	}
+	
+	/**
+	 * Set the response file
+	 * 
+	 */
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	/**
+	 * Tells if code is error.
+	 * 
+	 * @return is error
+	 */
+	public boolean isError() {
+		return code >= 400;
+	}
 	
 	/**
 	 * Gets the version of the HTTP.
@@ -63,8 +91,8 @@ public abstract class AbstractHTTPResponse implements IHTTPResponse {
 	 * Gets the status code of the response object.
 	 * @return the status
 	 */
-	public int getStatus() {
-		return status;
+	public int getCode() {
+		return code;
 	}
 
 	/**
@@ -108,7 +136,7 @@ public abstract class AbstractHTTPResponse implements IHTTPResponse {
 	 */
 	protected void writeGenericHeader(BufferedOutputStream out) {
 		// First status line
-		String line = version + Protocol.SPACE + status + Protocol.SPACE + phrase + Protocol.CRLF;
+		String line = version + Protocol.SPACE + code + Protocol.SPACE + phrase + Protocol.CRLF;
 		try {
 			out.write(line.getBytes());		
 			// Write header fields if there is something to write in header field
@@ -151,7 +179,7 @@ public abstract class AbstractHTTPResponse implements IHTTPResponse {
 		buffer.append("----------------------------------\n");
 		buffer.append(this.version);
 		buffer.append(Protocol.SPACE);
-		buffer.append(this.status);
+		buffer.append(this.code);
 		buffer.append(Protocol.SPACE);
 		buffer.append(this.phrase);
 		buffer.append(Protocol.LF);

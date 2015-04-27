@@ -39,12 +39,14 @@ import java.util.Map;
 public interface IHTTPResponse {
 
 	public void write(OutputStream outStream) throws Exception;
-	public void put(String contentType, String mime);
+	public void put(String key, String value);
 	public void fillGeneralHeader(String close);
 	
 	public String getVersion();
-	public int getStatus();
+	public int getCode();
 	public String getPhrase();
 	public File getFile();
 	public Map<String, String> getHeader();
+	public boolean isError();
+	public void setFile(File createTempFile);
 }

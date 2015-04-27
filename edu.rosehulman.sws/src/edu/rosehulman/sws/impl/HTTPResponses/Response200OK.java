@@ -50,7 +50,7 @@ public class Response200OK extends AbstractHTTPResponse {
 
 	public Response200OK(String version, File file) {
 		this.version = version;
-		this.status = Protocol.OK_CODE;
+		this.code = Protocol.OK_CODE;
 		this.phrase = Protocol.OK_TEXT;
 		this.header = new HashMap<String,String>();
 		this.file = file;
@@ -63,12 +63,7 @@ public class Response200OK extends AbstractHTTPResponse {
 	public void write(OutputStream outStream) {
 		if(file == null) {
 			// Create type ErrorResponse and verify that the response is not an error
-			try {
-				file = File.createTempFile("response", "temp");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			file = AbstractHTTPResponse.createTempResponseFile();
 		}
 	
 		// Lets get content length in bytes
@@ -110,8 +105,6 @@ public class Response200OK extends AbstractHTTPResponse {
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		}	
 	}
-
 }

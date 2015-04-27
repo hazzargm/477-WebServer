@@ -36,6 +36,8 @@ import java.util.Map;
 
 import edu.rosehulman.sws.gui.SpringUtilities;
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
+import edu.rosehulman.sws.impl.HTTPResponses.Response404NotFound;
 import edu.rosehulman.sws.server.Server;
 
 /**
@@ -98,6 +100,22 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 	}
 
 	public File lookup(Server server, boolean ensureFileCreation, String fileName) {
+		File file = findFile(server, ensureFileCreation, fileName);
+		
+		if (file == null) {
+			// File does not exist so lets create 404 file not found code
+			System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
+			this.response = new Response404NotFound(this.getVersion(), null);
+		} else {
+			// assume request is ok - change later if need be
+			this.response = new Response200OK(this.getVersion(), file);
+		}
+		
+		return file;
+	}
+
+
+	private File findFile(Server server, boolean ensureFileCreation, String fileName) {
 		// Get root directory path from server
 		String rootDirectory = server.getRootDirectory();
 		
@@ -110,14 +128,10 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		
 		// Combine them together to form absolute file path
 		File file = new File(SpringUtilities.combine(rootDirectory, uri) + fileName);
-		System.out.println("ROOT" + rootDirectory);
-		System.out.println("URI --- " + uri);
-		System.out.println("PATH --- " + file.getAbsolutePath());
-		
 		
 		// Check if the file exists
 		if (file.exists()) {
-			System.out.println("LOOKUP: Found File");
+			System.out.println("FILE EXISTS");
 			if (file.isDirectory()) {
 				// Look for default index.html file in a directory
 				String location = rootDirectory + uri
@@ -131,6 +145,7 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 				return file;
 			}
 		} else if (ensureFileCreation) {
+			System.out.println("ENSURE FILE CREATION");
 			// check if should create file
 			try {
 				file.createNewFile();
@@ -141,16 +156,9 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 			return file;
 		}
 		
-		// File does not exist so lets create 404 file not found code
-		System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
-		
-		
-		
 		return null;
-
 	}
-
-
+	
 	
 //	protected void printHeaderValuesOnly() {
 //		for(String s : header.keySet()){

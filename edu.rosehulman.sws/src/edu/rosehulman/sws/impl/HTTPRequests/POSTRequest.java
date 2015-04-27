@@ -67,7 +67,14 @@ public class POSTRequest extends AbstractHTTPRequest {
 		
 		// Create type ErrorResponse and verify that the response is not an error
 		File file = lookup(server, true, fileName);
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, null);
+		
+		if (!response.isError()) {
+			ReadAction readAction = new ReadAction(response, file);
+			response = readAction.performAction();
+		} else {
+			response.setFile(AbstractHTTPResponse.createTempResponseFile());
+		}
+		
 		
 		// pass in false so that file is overwritten
 		WriteAction writeAction = new WriteAction(response, server, file, this.body, this.uri, false);
