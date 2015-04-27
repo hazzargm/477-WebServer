@@ -69,15 +69,12 @@ public class PUTRequest extends AbstractHTTPRequest {
 		File file = lookup(server, false, null);
 		
 		if (!response.isError()) {
-			ReadAction readAction = new ReadAction(response, file);
-			response = readAction.performAction();
-		} else {
-			response.setFile(AbstractHTTPResponse.createTempResponseFile());
+			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
+			// pass in true so that file is appended to
+			WriteAction writeAction = new WriteAction(response, server, file, this.body, true);
+			response = writeAction.performAction();
 		}
 
-		// pass in true so that file is appended to
-		WriteAction writeAction = new WriteAction(response, server, file, this.body, true);
-		response = writeAction.performAction();
 		try {
 			response.write(outStream);
 			// Increment number of connections by 1
