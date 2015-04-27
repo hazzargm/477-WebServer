@@ -31,6 +31,8 @@ package edu.rosehulman.sws.impl.RequestActions;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Date;
 
 import edu.rosehulman.sws.impl.Protocol;
@@ -45,29 +47,28 @@ import edu.rosehulman.sws.server.Server;
 public class WriteAction extends AbstractRequestAction {
 	private boolean shouldAppend;
 
-	public WriteAction(IHTTPResponse response, Server server, char[] body, String uri, boolean shouldAppend) {
+	public WriteAction(IHTTPResponse response, Server server, File file, char[] body, String uri, boolean shouldAppend) {
 		this.response = response;
 		this.server = server;
 		this.uri = uri;
 		this.body = body;
 		this.shouldAppend = shouldAppend;
+		this.file = file;
 	}
 
 	@Override
 	public IHTTPResponse performAction() {
 		// Then create new file
 		try {
-			File newFile = this.response.getFile();
-
 			String fileBody = new String(getFileBody());
-			FileWriter fw = new FileWriter(newFile, this.shouldAppend);
+			FileWriter fw = new FileWriter(file, this.shouldAppend);
 			fw.write(fileBody);
 			fw.close();
 
 			// Lets fill up header fields with more information
 			response.fillGeneralHeader(Protocol.CLOSE);
 			// Lets add last modified date for the file
-			long timeSinceEpoch = newFile.lastModified();
+			long timeSinceEpoch = file.lastModified();
 			Date modifiedTime = new Date(timeSinceEpoch);
 			response.put(Protocol.LAST_MODIFIED, modifiedTime.toString());
 
@@ -75,7 +76,7 @@ public class WriteAction extends AbstractRequestAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(response);
+	//	System.out.println(response);
 		return response;
 	}
 

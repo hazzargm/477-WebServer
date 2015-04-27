@@ -66,10 +66,10 @@ public class PUTRequest extends AbstractHTTPRequest {
 
 		// Create type ErrorResponse and verify that the response is not an error
 		File file = lookup(server, false, fileName);
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, null);
 
 		// pass in true so that file is appended to
-		WriteAction writeAction = new WriteAction(response, server, this.body, this.uri, true);
+		WriteAction writeAction = new WriteAction(response, server, file, this.body, this.uri, true);
 		response = writeAction.performAction();
 		try {
 			response.write(outStream);

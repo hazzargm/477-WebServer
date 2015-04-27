@@ -63,15 +63,7 @@ public class DELRequest extends AbstractHTTPRequest {
 		String hostName = header.get("host"); //TODO: put in protocol
 		
 		File file = lookup(server, false, null);
-		// Create type ErrorResponse and verify that the response is not an error
-		File responseFile = null;
-		try {
-			responseFile = File.createTempFile("response", "temp");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, responseFile);
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, null);
 		DeleteAction deleteAction = new DeleteAction(response, file);
 		response = deleteAction.performAction();
 		try {

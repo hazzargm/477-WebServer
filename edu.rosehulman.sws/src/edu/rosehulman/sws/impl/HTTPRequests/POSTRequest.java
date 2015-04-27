@@ -65,16 +65,15 @@ public class POSTRequest extends AbstractHTTPRequest {
 		String hostName = header.get("host"); //TODO: put in protocol
 		String fileName = this.bodyHeader.get(Protocol.BODY_FILENAME);
 		
-		System.out.println("HERE : " + fileName);
-		
 		// Create type ErrorResponse and verify that the response is not an error
 		File file = lookup(server, true, fileName);
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, null);
 		
 		// pass in false so that file is overwritten
-		WriteAction writeAction = new WriteAction(response, server, this.body, this.uri, false);
+		WriteAction writeAction = new WriteAction(response, server, file, this.body, this.uri, false);
 		response = writeAction.performAction();
 		try {
+			System.out.println(response);
 			response.write(outStream);
 			// Increment number of connections by 1
 			server.incrementConnections(1);

@@ -35,6 +35,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,32 +61,55 @@ public class Response200OK extends AbstractHTTPResponse {
 	 */
 	@Override
 	public void write(OutputStream outStream) {
+		if(file == null) {
+			// Create type ErrorResponse and verify that the response is not an error
+			try {
+				file = File.createTempFile("response", "temp");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	
+		// Lets get content length in bytes
+		long length = file.length();
+		this.put(Protocol.CONTENT_LENGTH, length + "");
+		
+		// Lets get MIME type for the file
+		FileNameMap fileNameMap = URLConnection.getFileNameMap();
+		String mime = fileNameMap.getContentTypeFor(file.getName());
+		// The fileNameMap cannot find mime type for all of the documents, e.g. doc, odt, etc.
+		// So we will not add this field if we cannot figure out what a mime type is for the file.
+		// Let browser do this job by itself.
+		if(mime != null) { 
+			this.put(Protocol.CONTENT_TYPE, mime);
+		}
+		
+		
+		// Write headers
 		BufferedOutputStream out = new BufferedOutputStream(outStream, Protocol.CHUNK_LENGTH);
 		writeGenericHeader(out);
-	
-//		System.out.println("\n\nResponse:\n" + this);
+		
 		// We are reading a file
-		if(file != null) {
-			// Process text documents
-			FileInputStream fileInStream;
-			try {
-				fileInStream = new FileInputStream(file);
-				BufferedInputStream inStream = new BufferedInputStream(fileInStream, Protocol.CHUNK_LENGTH);
-			
-				byte[] buffer = new byte[Protocol.CHUNK_LENGTH];
-				int bytesRead = 0;
-				// While there is some bytes to read from file, read each chunk and send to the socket out stream
-				while((bytesRead = inStream.read(buffer)) != -1) {
-					out.write(buffer, 0, bytesRead);
-				}
-				// Close the file input stream, we are done reading
-				inStream.close();
-					
-				// Flush the data so that outStream sends everything through the socket 
-				out.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
+		// Process text documents
+		FileInputStream fileInStream;
+		try {
+			fileInStream = new FileInputStream(file);
+			BufferedInputStream inStream = new BufferedInputStream(fileInStream, Protocol.CHUNK_LENGTH);
+		
+			byte[] buffer = new byte[Protocol.CHUNK_LENGTH];
+			int bytesRead = 0;
+			// While there is some bytes to read from file, read each chunk and send to the socket out stream
+			while((bytesRead = inStream.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
 			}
+			// Close the file input stream, we are done reading
+			inStream.close();
+				
+			// Flush the data so that outStream sends everything through the socket 
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 	}
