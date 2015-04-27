@@ -126,11 +126,6 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 				file = new File(location);
 				if (file.exists()) {
 					return file;
-				} else {
-					// File does not exist so lets create 404 file not found
-					// code
-					// TODO: response =
-					// HttpResponseFactory.create404NotFound(Protocol.CLOSE);
 				}
 			} else { // Its a file
 				return file;
@@ -144,18 +139,13 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 				e.printStackTrace();
 			}
 			return file;
-		} else {
-			
-
-			System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
-			// // File does not exist so lets create 404 file not found code
-			// TODO: response =
-			// HttpResponseFactory.create404NotFound(Protocol.CLOSE);
 		}
-
-		// catch(Exception e) {
-		// e.printStackTrace();
-		// }
+		
+		// File does not exist so lets create 404 file not found code
+		System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
+		
+		
+		
 		return null;
 
 	}
