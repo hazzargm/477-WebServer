@@ -37,6 +37,7 @@ import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.WriteAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
 import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
+import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
@@ -65,7 +66,7 @@ public class PUTRequest extends AbstractHTTPRequest {
 
 		// Create type ErrorResponse and verify that the response is not an error
 		File file = lookup(server, false, fileName);
-		AbstractHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
 
 		// pass in true so that file is appended to
 		WriteAction writeAction = new WriteAction(response, server, this.body, this.uri, true);

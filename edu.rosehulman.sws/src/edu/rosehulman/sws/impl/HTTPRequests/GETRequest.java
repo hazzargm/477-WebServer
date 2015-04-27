@@ -61,7 +61,7 @@ public class GETRequest extends AbstractHTTPRequest {
 		String hostName = header.get("host"); //TODO: put in protocol
 		File file = lookup(server, false, null);
 		// Create type ErrorResponse and verify that the response is not an error
-		AbstractHTTPResponse response = new Response200OK(Protocol.VERSION, file);
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, file);
 		ReadAction readAction = new ReadAction(response, file);
 		response = readAction.performAction();
 		try {

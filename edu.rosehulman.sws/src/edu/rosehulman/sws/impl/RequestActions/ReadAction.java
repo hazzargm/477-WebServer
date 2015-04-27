@@ -45,13 +45,13 @@ import edu.rosehulman.sws.protocol.IHTTPResponse;
  */
 public class ReadAction extends AbstractRequestAction {
 
-	public ReadAction(AbstractHTTPResponse response, File file) {
+	public ReadAction(IHTTPResponse response, File file) {
 		this.response = response;
 		this.file = file;
 	}
 	
 	@Override
-	public AbstractHTTPResponse performAction() {				
+	public IHTTPResponse performAction() {				
 		// Lets fill up header fields with more information
 		response.fillGeneralHeader(Protocol.CLOSE);
 		// Lets add last modified date for the file

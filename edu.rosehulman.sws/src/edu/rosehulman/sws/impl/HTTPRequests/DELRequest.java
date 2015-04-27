@@ -71,7 +71,7 @@ public class DELRequest extends AbstractHTTPRequest {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		AbstractHTTPResponse response = new Response200OK(Protocol.VERSION, responseFile);
+		IHTTPResponse response = new Response200OK(Protocol.VERSION, responseFile);
 		DeleteAction deleteAction = new DeleteAction(response, file);
 		response = deleteAction.performAction();
 		try {

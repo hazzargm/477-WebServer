@@ -28,6 +28,7 @@
  
 package edu.rosehulman.sws.protocol;
 
+import java.io.File;
 import java.io.OutputStream;
 
 /**
@@ -51,5 +52,10 @@ public interface IHTTPResponse {
 	 * @param close
 	 */
 	public void fillGeneralHeader(String close);
+
+	/**
+	 * @return
+	 */
+	public File getFile();
 
 }

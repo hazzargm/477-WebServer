@@ -39,7 +39,7 @@ import edu.rosehulman.sws.protocol.IHTTPResponse;
  */
 public class DeleteAction extends AbstractRequestAction {
 	
-	public DeleteAction(AbstractHTTPResponse response, File file) {
+	public DeleteAction(IHTTPResponse response, File file) {
 		this.response = response;
 		this.file = file;
 	}
@@ -48,7 +48,7 @@ public class DeleteAction extends AbstractRequestAction {
 	 * @see edu.rosehulman.sws.protocol.IRequestAction#performAction()
 	 */
 	@Override
-	public AbstractHTTPResponse performAction() {
+	public IHTTPResponse performAction() {
 		this.file.delete();
 		//TODO: Update the response....
 		return response;

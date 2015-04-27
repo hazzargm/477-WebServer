@@ -36,6 +36,7 @@ import java.util.Date;
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
+import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
@@ -44,7 +45,7 @@ import edu.rosehulman.sws.server.Server;
 public class WriteAction extends AbstractRequestAction {
 	private boolean shouldAppend;
 
-	public WriteAction(AbstractHTTPResponse response, Server server, char[] body, String uri, boolean shouldAppend) {
+	public WriteAction(IHTTPResponse response, Server server, char[] body, String uri, boolean shouldAppend) {
 		this.response = response;
 		this.server = server;
 		this.uri = uri;
@@ -53,7 +54,7 @@ public class WriteAction extends AbstractRequestAction {
 	}
 
 	@Override
-	public AbstractHTTPResponse performAction() {
+	public IHTTPResponse performAction() {
 		// Then create new file
 		try {
 			File newFile = this.response.getFile();
