@@ -37,6 +37,7 @@ import java.net.URLConnection;
 import java.util.Date;
 
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response500InternalServiceError;
 import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
@@ -82,6 +83,7 @@ public class WriteAction extends AbstractRequestAction {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			return new Response500InternalServiceError(this.response.getVersion(), file);
 		}
 		
 		return response;

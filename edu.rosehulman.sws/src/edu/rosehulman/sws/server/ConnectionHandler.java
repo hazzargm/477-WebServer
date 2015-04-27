@@ -33,6 +33,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response500InternalServiceError;
+import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.IHTTPRequest;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
 import edu.rosehulman.sws.protocol.ProtocolException;
@@ -95,24 +97,15 @@ public class ConnectionHandler implements Runnable {
 			// Chandan's code: request1 = HttpRequest.read(inStream);
 			request = URLParser.parseIncomingRequest(inStream);
 			System.out.println(request);
-		} catch (ProtocolException pe) { // TODO: We will likely handle this
-											// elsewhere
-			// We have some sort of protocol exception. Get its status code and
-			// create response
-			// We know only two kind of exception is possible inside
-			// fromInputStream
-			// Protocol.BAD_REQUEST_CODE and Protocol.NOT_SUPPORTED_CODE
-			int status = pe.getStatus();
-			if (status == Protocol.BAD_REQUEST_CODE) {
-				// Chandan's code: response =
-				// HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
-			}
-			// TODO: Handle version not supported code as well
 		} catch (Exception e) {
 			e.printStackTrace();
-			// For any other error, we will create bad request response as well
-			// Chandan's code: response =
-			// HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
+			IHTTPResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHTTPResponse.createTempResponseFile());
+			try {
+				errorResponse.write(outStream);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		if (request != null) {
 			request.handleRequest(server, outStream, start); //TODO
