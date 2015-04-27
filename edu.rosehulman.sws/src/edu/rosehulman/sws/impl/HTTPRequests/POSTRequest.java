@@ -68,11 +68,10 @@ public class POSTRequest extends AbstractHTTPRequest {
 		File file = lookup(server, true, null);
 		
 		if (!response.isError()) {
+			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
 			// pass in false so that file is overwritten
 			WriteAction writeAction = new WriteAction(response, server, file, this.body, false);
 			response = writeAction.performAction();
-		} else {
-			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
 		}
 		
 		try {
