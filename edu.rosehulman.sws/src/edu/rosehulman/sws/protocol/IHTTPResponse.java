@@ -30,32 +30,21 @@ package edu.rosehulman.sws.protocol;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * 
  */
 public interface IHTTPResponse {
 
-	/**
-	 * @param outStream
-	 * @throws Exception 
-	 */
 	public void write(OutputStream outStream) throws Exception;
-
-	/**
-	 * @param contentType
-	 * @param mime
-	 */
 	public void put(String contentType, String mime);
-
-	/**
-	 * @param close
-	 */
 	public void fillGeneralHeader(String close);
-
-	/**
-	 * @return
-	 */
+	
+	public String getVersion();
+	public int getStatus();
+	public String getPhrase();
 	public File getFile();
-
+	public Map<String, String> getHeader();
 }
