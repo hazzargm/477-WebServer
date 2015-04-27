@@ -49,7 +49,7 @@ public abstract class AbstractRequestAction implements IRequestAction {
 		String[] lines = bodyString.split(System.getProperty("line.separator"));
 		int index = 4;
 		bodyString = "";
-		while(index < lines.length - 1) {
+		while(!lines[index].startsWith(lines[0])) {
 			if(index == lines.length - 2) { //The last line so don't add line separator
 				bodyString += lines[index];
 			} else {
