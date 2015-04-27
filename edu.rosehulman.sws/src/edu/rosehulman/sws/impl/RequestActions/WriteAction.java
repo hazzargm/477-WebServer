@@ -48,10 +48,9 @@ import edu.rosehulman.sws.server.Server;
 public class WriteAction extends AbstractRequestAction {
 	private boolean shouldAppend;
 
-	public WriteAction(IHTTPResponse response, Server server, File file, char[] body, String uri, boolean shouldAppend) {
+	public WriteAction(IHTTPResponse response, Server server, File file, char[] body, boolean shouldAppend) {
 		this.response = response;
 		this.server = server;
-		this.uri = uri;
 		this.body = body;
 		this.shouldAppend = shouldAppend;
 		this.file = file;
@@ -82,10 +81,9 @@ public class WriteAction extends AbstractRequestAction {
 			response.put(Protocol.LAST_MODIFIED, modifiedTime.toString());
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	//	System.out.println(response);
+		
 		return response;
 	}
 

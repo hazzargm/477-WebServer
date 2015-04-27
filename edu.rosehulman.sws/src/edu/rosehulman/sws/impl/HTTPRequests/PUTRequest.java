@@ -34,6 +34,7 @@ import java.util.Map;
 
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
+import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.impl.RequestActions.WriteAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
 import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
@@ -66,10 +67,16 @@ public class PUTRequest extends AbstractHTTPRequest {
 
 		// Create type ErrorResponse and verify that the response is not an error
 		File file = lookup(server, false, null);
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, null);
+		
+		if (!response.isError()) {
+			ReadAction readAction = new ReadAction(response, file);
+			response = readAction.performAction();
+		} else {
+			response.setFile(AbstractHTTPResponse.createTempResponseFile());
+		}
 
 		// pass in true so that file is appended to
-		WriteAction writeAction = new WriteAction(response, server, file, this.body, this.uri, true);
+		WriteAction writeAction = new WriteAction(response, server, file, this.body, true);
 		response = writeAction.performAction();
 		try {
 			response.write(outStream);

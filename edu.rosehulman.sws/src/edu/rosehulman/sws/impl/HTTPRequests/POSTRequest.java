@@ -63,22 +63,18 @@ public class POSTRequest extends AbstractHTTPRequest {
 	public void handleRequest(Server server, OutputStream outStream, long start) {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
-		String fileName = this.bodyHeader.get(Protocol.BODY_FILENAME);
 		
 		// Create type ErrorResponse and verify that the response is not an error
-		File file = lookup(server, true, fileName);
+		File file = lookup(server, true, null);
 		
 		if (!response.isError()) {
-			ReadAction readAction = new ReadAction(response, file);
-			response = readAction.performAction();
+			// pass in false so that file is overwritten
+			WriteAction writeAction = new WriteAction(response, server, file, this.body, false);
+			response = writeAction.performAction();
 		} else {
-			response.setFile(AbstractHTTPResponse.createTempResponseFile());
+			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
 		}
 		
-		
-		// pass in false so that file is overwritten
-		WriteAction writeAction = new WriteAction(response, server, file, this.body, this.uri, false);
-		response = writeAction.performAction();
 		try {
 			System.out.println(response);
 			response.write(outStream);
