@@ -28,6 +28,7 @@
 
 package edu.rosehulman.sws.impl.RequestActions;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -62,7 +63,15 @@ public class WriteAction extends AbstractRequestAction {
 		try {
 			String fileBody = new String(getFileBody());
 			FileWriter fw = new FileWriter(file, this.shouldAppend);
-			fw.write(fileBody);
+			BufferedWriter bufferWritter = new BufferedWriter(fw);
+			System.out.println("FILE-BODY " + fileBody);
+			if (this.shouldAppend) {
+				bufferWritter.append(fileBody);
+			} else {
+				bufferWritter.write(fileBody);
+			}
+			bufferWritter.flush();
+	        bufferWritter.close();
 			fw.close();
 
 			// Lets fill up header fields with more information

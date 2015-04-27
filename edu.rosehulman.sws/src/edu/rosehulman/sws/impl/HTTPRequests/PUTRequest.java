@@ -62,10 +62,9 @@ public class PUTRequest extends AbstractHTTPRequest {
 	public void handleRequest(Server server, OutputStream outStream, long start) {
 		String date = header.get("if-modified-since"); // TODO: put in protocol
 		String hostName = header.get("host"); // TODO: put in protocol
-		String fileName = this.bodyHeader.get("filename");
 
 		// Create type ErrorResponse and verify that the response is not an error
-		File file = lookup(server, false, fileName);
+		File file = lookup(server, false, null);
 		IHTTPResponse response = new Response200OK(Protocol.VERSION, null);
 
 		// pass in true so that file is appended to
