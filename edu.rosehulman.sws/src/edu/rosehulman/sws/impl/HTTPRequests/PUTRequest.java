@@ -51,6 +51,7 @@ public class PUTRequest extends AbstractHTTPRequest {
 		this.uri = uri;
 		this.version = version;
 		this.header = header;
+		this.body = body;
 	}
 
 	/*
