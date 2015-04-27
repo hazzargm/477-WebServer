@@ -63,6 +63,7 @@ public class ConnectionHandler implements Runnable {
 	 */
 	@Override
 	public void run() {
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!");
 		// Get the start time
 		long start = System.currentTimeMillis();
 

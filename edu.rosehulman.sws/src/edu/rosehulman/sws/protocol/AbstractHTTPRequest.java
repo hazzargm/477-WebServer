@@ -100,6 +100,7 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 	}
 
 	public File lookup(Server server, boolean ensureFileCreation, String fileName) {
+		System.out.println("CHECK FILE");
 		File file = findFile(server, ensureFileCreation, fileName);
 		
 		if (file == null) {

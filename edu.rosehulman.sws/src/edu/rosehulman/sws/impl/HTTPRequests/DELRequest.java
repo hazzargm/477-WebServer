@@ -37,6 +37,7 @@ import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.DeleteAction;
 import edu.rosehulman.sws.impl.RequestActions.ReadAction;
+import edu.rosehulman.sws.impl.RequestActions.WriteAction;
 import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
 import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
 import edu.rosehulman.sws.protocol.IHTTPResponse;
@@ -61,11 +62,19 @@ public class DELRequest extends AbstractHTTPRequest {
 	public void handleRequest(Server server, OutputStream outStream, long start) {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
-		
+		System.out.println("LOOKUP START");
+		// Create type ErrorResponse and verify that the response is not an error
 		File file = lookup(server, false, null);
-		IHTTPResponse response = new Response200OK(Protocol.VERSION, null);
-		DeleteAction deleteAction = new DeleteAction(response, file);
-		response = deleteAction.performAction();
+		
+		System.out.println("LOOKUP END");
+		
+		if (!response.isError()) {
+			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
+			// pass in true so that file is appended to
+			DeleteAction deleteAction = new DeleteAction(response, file);
+			response = deleteAction.performAction();
+		}
+		
 		try {
 			response.write(outStream);
 			// Increment number of connections by 1
