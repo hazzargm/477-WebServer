@@ -97,6 +97,7 @@ public class ConnectionHandler implements Runnable {
 			// Chandan's code: request1 = HttpRequest.read(inStream);
 			request = URLParser.parseIncomingRequest(inStream);
 			System.out.println(request);
+			request.handleRequest(server, outStream, start);
 		} catch (Exception e) {
 			e.printStackTrace();
 			IHTTPResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHTTPResponse.createTempResponseFile());
@@ -107,9 +108,5 @@ public class ConnectionHandler implements Runnable {
 				e1.printStackTrace();
 			}
 		}
-		if (request != null) {
-			request.handleRequest(server, outStream, start); //TODO
-		}
-
 	}
 }

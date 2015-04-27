@@ -38,7 +38,6 @@ import edu.rosehulman.sws.gui.SpringUtilities;
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.HTTPResponses.Response404NotFound;
-import edu.rosehulman.sws.impl.HTTPResponses.Response500InternalServiceError;
 import edu.rosehulman.sws.server.Server;
 
 /**
@@ -101,18 +100,15 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 	}
 
 	public File lookup(Server server, boolean ensureFileCreation, String fileName) {
-		System.out.println("CHECK FILE");
 		File file = findFile(server, ensureFileCreation, fileName);
 		
-		if (!response.isError()) {
-			if (file == null) {
-				// File does not exist so lets create 404 file not found code
-				System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
-				this.response = new Response404NotFound(this.getVersion(), null);
-			} else {
-				// assume request is ok - change later if need be
-				this.response = new Response200OK(this.getVersion(), file);
-			}
+		if (file == null) {
+			// File does not exist so lets create 404 file not found code
+			System.out.println("FILE DOES NOT EXIST FOR LOOKUP");
+			this.response = new Response404NotFound(this.getVersion(), null);
+		} else {
+			// assume request is ok - change later if need be
+			this.response = new Response200OK(this.getVersion(), file);
 		}
 		
 		return file;
@@ -155,9 +151,7 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 				file.createNewFile();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				this.response = new Response500InternalServiceError(this.response.getVersion(), file);
 				e.printStackTrace();
-				return null;
 			}
 			return file;
 		}
