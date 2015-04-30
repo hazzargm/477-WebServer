@@ -32,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,6 +78,20 @@ public abstract class AbstractPlugin implements IPlugin {
 	private void parseRouteLine(String line) {
 		// split line on any amount of white space in between parts
 		String[] routeParts = line.split("\\s+");
+		String routeKey = routeParts[0] + routeParts[1];
+		String routeServletClass = routeParts[2];
+		
+		// create new servlet instance frome routeServlet name
+		Class<?> servletClass;
+		try {
+			servletClass = Class.forName(routeServletClass);
+			Constructor<?> servletConstructor = servletClass.getConstructor(String.class);
+			IServlet servlet = (IServlet) servletConstructor.newInstance();
+			this.servletMap.put(routeKey, servlet);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void process(IHTTPRequest request, IHTTPResponse response) {
