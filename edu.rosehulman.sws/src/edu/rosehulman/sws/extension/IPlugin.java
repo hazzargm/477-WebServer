@@ -28,10 +28,17 @@
  
 package edu.rosehulman.sws.extension;
 
+import edu.rosehulman.sws.protocol.IHTTPRequest;
+import edu.rosehulman.sws.protocol.IHTTPResponse;
+
 /**
  * 
  * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
 public interface IPlugin {
-
+	public static String ROUTE_FILE_NAME = "routes.txt";
+	
+	public void route(IHTTPRequest request, IHTTPResponse response);
+	public String getDomain();
+	public IPlugin getPlugin();
 }
