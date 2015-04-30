@@ -99,7 +99,7 @@ public class PluginLoader {
 	}
 	
 	private void removePlugin(String pluginDomain) {
-		server.removePlugin(pluginDomain);
+		server.uninstallPlugin(pluginDomain);
 	}
     
 	@SuppressWarnings({ "resource", "deprecation" })
@@ -126,11 +126,11 @@ public class PluginLoader {
 					Object plug = method.invoke(pluginObj);
 					plugin = (IPlugin) plug;
 
-				} catch (ClassNotFoundException | IOException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				} catch (Exception e) {
 					// Do Nothing! :)
 				}
 				if(plugin != null) {
-					server.addPlugin(plugin);
+					server.installPlugin(plugin);
 				} else {
 					System.out.println("----------------------PLUGIN " + pluginName + " COULD NOT BE LOADED----------------------");
 				}

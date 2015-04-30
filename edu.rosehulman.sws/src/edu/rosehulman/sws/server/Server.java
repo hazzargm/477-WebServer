@@ -191,15 +191,15 @@ public class Server implements Runnable {
 		return true;
 	}
 	
-	public void addPlugin(IPlugin plugin) {
-//		String domain = plugin.getDomain();
-//		if(plugins.containsKey(domain)) {
-//			plugins.remove(domain);
-//		}
-//		plugins.put(domain, plugin);
+	public void installPlugin(IPlugin plugin) {
+		String domain = plugin.getDomain();
+		if(plugins.containsKey(domain)) {
+			plugins.remove(domain);
+		}
+		plugins.put(domain, plugin);
 	}
 	
-	public void removePlugin(String pluginDomain) {
+	public void uninstallPlugin(String pluginDomain) {
 		plugins.remove(pluginDomain);
 	}
 }
