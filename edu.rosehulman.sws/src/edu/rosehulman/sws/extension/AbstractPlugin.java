@@ -52,7 +52,8 @@ public abstract class AbstractPlugin implements IPlugin {
 	private Map<String, IServlet> servletMap;
 	private String rootDir;
 	
-	public AbstractPlugin() {
+	public static String getServeltRouteKey(String method, String uri) {
+		return (method + uri).toLowerCase();
 	}
 	
 	public void loadServlets(String rootDir) {
@@ -78,7 +79,7 @@ public abstract class AbstractPlugin implements IPlugin {
 	private void parseRouteLine(String line) {
 		// split line on any amount of white space in between parts
 		String[] routeParts = line.split("\\s+");
-		String routeKey = routeParts[0] + routeParts[1];
+		String routeKey = getServeltRouteKey(routeParts[0], routeParts[1]);
 		String routeServletClass = routeParts[2];
 		
 		// create new servlet instance frome routeServlet name

@@ -21,6 +21,8 @@
  
 package edu.rosehulman.sws.server;
 
+import edu.rosehulman.sws.extension.AbstractPlugin;
+import edu.rosehulman.sws.extension.AbstractServlet;
 import edu.rosehulman.sws.extension.IPlugin;
 import edu.rosehulman.sws.gui.WebServer;
 
