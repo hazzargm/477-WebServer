@@ -28,29 +28,71 @@
  
 package edu.rosehulman.sws.extension;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.print.attribute.HashAttributeSet;
+
+import edu.rosehulman.sws.protocol.IHTTPRequest;
+import edu.rosehulman.sws.protocol.IHTTPResponse;
 
 /**
  * 
  * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
 public abstract class AbstractPlugin implements IPlugin {
+	
+	private final String domain = ""; //This will be some constant in all conrete plugin implementations
 	private Map<String, IServlet> servletMap;
 	private String rootDir;
 	
 	public AbstractPlugin() {
 	}
 	
-	public void setRootDirectory(String rootDir) {
+	public void loadServlets(String rootDir) {
 		this.rootDir = rootDir;
-		loadServlets();
+		// lookup route file for specific plugin domain
+		String routeFilePath = rootDir + File.separator + getDomain() + IPlugin.ROUTE_FILE_NAME;
+		File routeFile = new File(routeFilePath);
+		this.servletMap = new HashMap<String, IServlet>();
+		 
+		try {
+			// load each line entry of route file into map
+			BufferedReader br = new BufferedReader(new FileReader(routeFile));  
+			String line = null;
+			while ((line = br.readLine()) != null)  
+			{  
+				parseRouteLine(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 	}
 	
-	private void loadServlets() {
-		this.servletMap = new HashMap<String, IServlet>();
+	private void parseRouteLine(String line) {
+		// split line on any amount of white space in between parts
+		String[] routeParts = line.split("\\s+");
+	}
+	
+	public void process(IHTTPRequest request, IHTTPResponse response) {
 		
 	}
+	
+	public String getDomain() {
+		return domain;
+	}
+	
+	public IPlugin getPlugin() {
+		return this;
+	}
+	
+	public void route(IHTTPRequest request, IHTTPResponse response) {
+		
+	}
+
+
 }

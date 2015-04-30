@@ -167,7 +167,7 @@ public class PluginLoader {
      */
     void processEvents() {
         for (;;) {
-            // wait for key to be signalled
+            // wait for key to be signaled
             WatchKey key;
             try {
                 key = watcher.take();

@@ -39,6 +39,7 @@ public interface IPlugin {
 	public static String ROUTE_FILE_NAME = "routes.txt";
 	
 	public void route(IHTTPRequest request, IHTTPResponse response);
+	public void loadServlets(String rootDir);
 	public String getDomain();
 	public IPlugin getPlugin();
 }
