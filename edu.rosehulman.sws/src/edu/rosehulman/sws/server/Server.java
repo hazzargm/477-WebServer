@@ -21,11 +21,13 @@
  
 package edu.rosehulman.sws.server;
 
+import edu.rosehulman.sws.extension.IPlugin;
 import edu.rosehulman.sws.gui.WebServer;
 
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 
 /**
  * This represents a welcoming server for the incoming
@@ -38,6 +40,8 @@ public class Server implements Runnable {
 	private int port;
 	private boolean stop;
 	private ServerSocket welcomeSocket;
+	
+	private Map<String, IPlugin> plugins;
 	
 	private long connections;
 	private long serviceTime;
