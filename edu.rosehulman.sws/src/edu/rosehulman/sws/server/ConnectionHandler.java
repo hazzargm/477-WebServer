@@ -65,7 +65,7 @@ public class ConnectionHandler implements Runnable {
 	 */
 	@Override
 	public void run() {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!TALK TO CHANDAN");
 		// Get the start time
 		long start = System.currentTimeMillis();
 
@@ -104,9 +104,12 @@ public class ConnectionHandler implements Runnable {
 			try {
 				errorResponse.write(outStream);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	private void distributeRequest(IHTTPRequest request) {
+		
 	}
 }
