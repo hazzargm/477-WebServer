@@ -24,9 +24,12 @@ package edu.rosehulman.sws.server;
 import edu.rosehulman.sws.extension.IPlugin;
 import edu.rosehulman.sws.gui.WebServer;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,6 +45,7 @@ public class Server implements Runnable {
 	private ServerSocket welcomeSocket;
 	
 	private Map<String, IPlugin> plugins;
+	private PluginLoader loader;
 	
 	private long connections;
 	private long serviceTime;
@@ -58,6 +62,15 @@ public class Server implements Runnable {
 		this.connections = 0;
 		this.serviceTime = 0;
 		this.window = window;
+		this.plugins = new HashMap<String, IPlugin>();
+		File pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
+		System.out.println(pluginDir);
+		try {
+			loader = new PluginLoader(this, pluginDir);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -119,7 +132,10 @@ public class Server implements Runnable {
 	 * the request.
 	 */
 	public void run() {
+		loader.loadAllPlugins();
 		try {
+			loader.watchPlugins();
+			
 			this.welcomeSocket = new ServerSocket(port);
 			
 			// Now keep welcoming new connections until stop flag is set to true
@@ -171,5 +187,17 @@ public class Server implements Runnable {
 		if(this.welcomeSocket != null)
 			return this.welcomeSocket.isClosed();
 		return true;
+	}
+	
+	public void addPlugin(IPlugin plugin) {
+//		String domain = plugin.getDomain();
+//		if(plugins.containsKey(domain)) {
+//			plugins.remove(domain);
+//		}
+//		plugins.put(domain, plugin);
+	}
+	
+	public void removePlugin(String pluginDomain) {
+		plugins.remove(pluginDomain);
 	}
 }
