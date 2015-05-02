@@ -36,15 +36,15 @@ import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.impl.RequestActions.WriteAction;
-import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpRequest;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
-public class PUTRequest extends AbstractHTTPRequest {
+public class PUTRequest extends AbstractHttpRequest {
 
 	public PUTRequest(String uri, String version, Map<String, String> header,
 			char[] body, Map<String, String> bodyHeader) {
@@ -61,22 +61,22 @@ public class PUTRequest extends AbstractHTTPRequest {
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
 	 */
 	@Override
-	public void handleRequest(Server server, OutputStream outStream, long start) {
+	public void handleRequest() {
 		String date = header.get("if-modified-since"); // TODO: put in protocol
 		String hostName = header.get("host"); // TODO: put in protocol
 
 		// Create type ErrorResponse and verify that the response is not an error
-		File file = lookup(server, false, null);
+		File file = lookup(false, null);
 		
 		if (!response.isError()) {
-			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
+			this.response.setFile(AbstractHttpResponse.createTempResponseFile());
 			// pass in true so that file is appended to
 			WriteAction writeAction = new WriteAction(response, server, file, this.body, true);
 			response = writeAction.performAction();
 		}
 
 		try {
-			response.write(outStream);
+			response.write(out);
 			// Increment number of connections by 1
 			server.incrementConnections(1);
 			// Get the end time

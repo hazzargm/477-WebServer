@@ -30,6 +30,7 @@ package edu.rosehulman.sws.protocol;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,17 +44,21 @@ import edu.rosehulman.sws.server.Server;
 /**
  * 
  */
-public abstract class AbstractHTTPRequest implements IHTTPRequest {
+public abstract class AbstractHttpRequest implements IHttpRequest {
 	protected String method;
 	protected String uri;
 	protected String version;
 	protected Map<String, String> header;
 	protected char[] body;
 	protected Map<String, String> bodyHeader;
+	
+	protected Server server;
+	protected OutputStream out;
+	protected long start;
 
-	protected IHTTPResponse response;
+	protected IHttpResponse response;
 
-	public AbstractHTTPRequest() {
+	public AbstractHttpRequest() {
 		this.header = new HashMap<String, String>();
 		this.body = new char[0];
 	}
@@ -88,6 +93,18 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 	public char[] getBody() {
 		return body;
 	}
+	
+	public OutputStream getOutputStream() {
+		return this.out;
+	}
+	
+	public Server getServer() {
+		return this.server;
+	}
+	
+	public long getStart() {
+		return this.start;
+	}
 
 	/**
 	 * The key to value mapping in the request header fields.
@@ -99,7 +116,7 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		return Collections.unmodifiableMap(header);
 	}
 
-	public File lookup(Server server, boolean ensureFileCreation, String fileName) {
+	public File lookup(boolean ensureFileCreation, String fileName) {
 		File file = findFile(server, ensureFileCreation, fileName);
 		
 		if (file == null) {
@@ -157,6 +174,16 @@ public abstract class AbstractHTTPRequest implements IHTTPRequest {
 		}
 		
 		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#setCallback(edu.rosehulman.sws.server.Server, java.io.OutputStream, long)
+	 */
+	@Override
+	public void setCallback(Server server, OutputStream outStream, long start) {
+		this.server = server;
+		this.out = outStream;
+		this.start = start;
 	}
 	
 	

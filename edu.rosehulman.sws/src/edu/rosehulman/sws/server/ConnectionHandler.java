@@ -32,11 +32,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import edu.rosehulman.sws.extension.IPlugin;
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.HTTPResponses.Response500InternalServiceError;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
-import edu.rosehulman.sws.protocol.IHTTPRequest;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
+import edu.rosehulman.sws.protocol.IHttpRequest;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 import edu.rosehulman.sws.protocol.ProtocolException;
 
 /**
@@ -92,15 +94,15 @@ public class ConnectionHandler implements Runnable {
 
 		// At this point we have the input and output stream of the socket
 		// Now lets create a HttpRequest object
-		IHTTPRequest request = null;
+		IHttpRequest request = null;
 		try {
 			// Chandan's code: request1 = HttpRequest.read(inStream);
 			request = URLParser.parseIncomingRequest(inStream);
-			System.out.println(request);
-			request.handleRequest(server, outStream, start);
+			request.setCallback(server, outStream, start);
+			this.distributeRequest(request);
 		} catch (Exception e) {
 			e.printStackTrace();
-			IHTTPResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHTTPResponse.createTempResponseFile());
+			IHttpResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHttpResponse.createTempResponseFile());
 			try {
 				errorResponse.write(outStream);
 			} catch (Exception e1) {
@@ -109,7 +111,14 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 	
-	private void distributeRequest(IHTTPRequest request) {
-		
+	private void distributeRequest(IHttpRequest request) {
+		System.out.println(request);
+		String pluginDomain = URLParser.getPluginDomain(request.getUri());
+		IPlugin p = server.getPlugin(pluginDomain);
+		if(p != null) {
+			p.route(request, new Response200OK());
+		} else {
+			request.handleRequest();
+		}
 	}
 }

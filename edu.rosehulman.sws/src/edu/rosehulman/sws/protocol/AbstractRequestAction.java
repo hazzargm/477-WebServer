@@ -37,7 +37,7 @@ import edu.rosehulman.sws.server.Server;
  * 
  */
 public abstract class AbstractRequestAction implements IRequestAction {
-	protected IHTTPResponse response;
+	protected IHttpResponse response;
 	protected File file;
 	protected char[] body;
 	protected String uri;

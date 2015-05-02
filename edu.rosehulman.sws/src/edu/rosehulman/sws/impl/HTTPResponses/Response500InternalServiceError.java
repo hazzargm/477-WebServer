@@ -39,12 +39,12 @@ import java.net.URLConnection;
 import java.util.HashMap;
 
 import edu.rosehulman.sws.impl.Protocol;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
 
 /**
  * 
  */
-public class Response500InternalServiceError extends AbstractHTTPResponse {
+public class Response500InternalServiceError extends AbstractHttpResponse {
 
 	public Response500InternalServiceError(String version, File file) {
 		this.version = version;
@@ -54,13 +54,19 @@ public class Response500InternalServiceError extends AbstractHTTPResponse {
 		this.file = file;
 	}
 	
+	public Response500InternalServiceError() {
+		this.code = Protocol.INTERNAL_SERVER_ERROR_CODE;
+		this.phrase = Protocol.INTERNAL_SERVER_ERROR_TEXT;
+		this.header = new HashMap<String,String>();
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.rosehulman.sws.protocol.IHTTPResponse#write(java.io.OutputStream)
 	 */
 	@Override
 	public void write(OutputStream outStream) {
 		if(file == null) {
-			file = AbstractHTTPResponse.createTempResponseFile();
+			file = AbstractHttpResponse.createTempResponseFile();
 		}
 	
 		// Lets get content length in bytes

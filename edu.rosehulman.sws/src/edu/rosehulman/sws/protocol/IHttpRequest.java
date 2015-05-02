@@ -37,13 +37,14 @@ import edu.rosehulman.sws.server.Server;
 /**
  * 
  */
-public interface IHTTPRequest {	
-	public abstract void handleRequest(Server server, OutputStream outStream, long start);
-	public File lookup(Server server, boolean ensureFileCreation, String filename);
-
+public interface IHttpRequest {	
+	public abstract void handleRequest();
+	public File lookup(boolean ensureFileCreation, String filename);
+	public void setCallback(Server server, OutputStream outStream, long start);
+	
 	public String getMethod();
 	public String getUri();
 	public String getVersion();
 	public char[] getBody();
-	public Map<String, String> getHeader();
+	public Map<String, String> getHeader();	
 }

@@ -36,22 +36,22 @@ import java.util.HashMap;
 
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 
 /**
  * 
  */
 public class ReadAction extends AbstractRequestAction {
 
-	public ReadAction(IHTTPResponse response, File file) {
+	public ReadAction(IHttpResponse response, File file) {
 		this.response = response;
 		this.file = file;
 	}
 	
 	@Override
-	public IHTTPResponse performAction() {				
+	public IHttpResponse performAction() {				
 		// Lets fill up header fields with more information
 		response.fillGeneralHeader(Protocol.CLOSE);
 		// Lets add last modified date for the file

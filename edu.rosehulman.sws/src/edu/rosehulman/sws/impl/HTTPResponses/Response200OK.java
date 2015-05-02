@@ -41,12 +41,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.rosehulman.sws.impl.Protocol;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
 
 /**
  * 
  */
-public class Response200OK extends AbstractHTTPResponse {
+public class Response200OK extends AbstractHttpResponse {
 
 	public Response200OK(String version, File file) {
 		this.version = version;
@@ -56,6 +56,12 @@ public class Response200OK extends AbstractHTTPResponse {
 		this.file = file;
 	}
 	
+	public Response200OK() {
+		this.code = Protocol.OK_CODE;
+		this.phrase = Protocol.OK_TEXT;
+		this.header = new HashMap<String,String>();
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.rosehulman.sws.protocol.IHTTPResponse#write(java.io.OutputStream)
 	 */
@@ -63,7 +69,7 @@ public class Response200OK extends AbstractHTTPResponse {
 	public void write(OutputStream outStream) {
 		if(file == null) {
 			// Create type ErrorResponse and verify that the response is not an error
-			file = AbstractHTTPResponse.createTempResponseFile();
+			file = AbstractHttpResponse.createTempResponseFile();
 		}
 	
 		// Lets get content length in bytes

@@ -39,8 +39,10 @@ import java.util.Map;
 
 import javax.print.attribute.HashAttributeSet;
 
-import edu.rosehulman.sws.protocol.IHTTPRequest;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
+import edu.rosehulman.sws.protocol.IHttpRequest;
+import edu.rosehulman.sws.protocol.IHttpResponse;
+import edu.rosehulman.sws.server.URLParser;
 
 /**
  * 
@@ -95,10 +97,6 @@ public abstract class AbstractPlugin implements IPlugin {
 		}
 	}
 	
-	public void process(IHTTPRequest request, IHTTPResponse response) {
-		
-	}
-	
 	public String getDomain() {
 		return domain;
 	}
@@ -107,8 +105,14 @@ public abstract class AbstractPlugin implements IPlugin {
 		return this;
 	}
 	
-	public void route(IHTTPRequest request, IHTTPResponse response) {
-		
+	public void route(IHttpRequest request, IHttpResponse response) {
+		String servletName = URLParser.getServletDomain(request.getUri());
+		IServlet s = servletMap.get(servletName);
+		if(s != null) {
+			s.process(request, new Response200OK());
+		} else {
+			// TODO Return whatever error response for accesses a bad servlet (404 not found?)
+		}
 	}
 
 

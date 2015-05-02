@@ -1,5 +1,5 @@
 /*
- * IProtocol.java
+ * IHTTPResponse.java
  * Apr 22, 2015
  *
  * Simple Web Server (SWS) for EE407/507 and CS455/555
@@ -28,9 +28,25 @@
  
 package edu.rosehulman.sws.protocol;
 
-/**
- * TODO WE MAY NOT NEED/WANT THIS CLASS 
- */
-public interface IProtocol {
+import java.io.File;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Map;
 
+/**
+ * 
+ */
+public interface IHttpResponse {
+
+	public void write(OutputStream outStream) throws Exception;
+	public void put(String key, String value);
+	public void fillGeneralHeader(String close);
+	
+	public String getVersion();
+	public int getCode();
+	public String getPhrase();
+	public File getFile();
+	public Map<String, String> getHeader();
+	public boolean isError();
+	public void setFile(File createTempFile);
 }

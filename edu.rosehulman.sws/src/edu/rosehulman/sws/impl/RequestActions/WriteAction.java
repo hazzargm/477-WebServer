@@ -38,9 +38,9 @@ import java.util.Date;
 
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response500InternalServiceError;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
 import edu.rosehulman.sws.protocol.AbstractRequestAction;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
@@ -49,7 +49,7 @@ import edu.rosehulman.sws.server.Server;
 public class WriteAction extends AbstractRequestAction {
 	private boolean shouldAppend;
 
-	public WriteAction(IHTTPResponse response, Server server, File file, char[] body, boolean shouldAppend) {
+	public WriteAction(IHttpResponse response, Server server, File file, char[] body, boolean shouldAppend) {
 		this.response = response;
 		this.server = server;
 		this.body = body;
@@ -58,7 +58,7 @@ public class WriteAction extends AbstractRequestAction {
 	}
 
 	@Override
-	public IHTTPResponse performAction() {
+	public IHttpResponse performAction() {
 		// Then create new file
 		try {
 			String fileBody = new String(getFileBody());

@@ -28,14 +28,18 @@
  
 package edu.rosehulman.sws.extension;
 
-import edu.rosehulman.sws.protocol.IHTTPRequest;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.IHttpRequest;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 
 /**
  * 
  * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
 public abstract class AbstractServlet implements IServlet {
-	private IHTTPRequest request;
-	private IHTTPResponse response;
+	private IHttpRequest request;
+	private IHttpResponse response;
+	
+	public void process(IHttpRequest request, IHttpResponse response) {
+		
+	}
 }

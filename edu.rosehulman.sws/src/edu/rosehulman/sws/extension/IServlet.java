@@ -28,13 +28,13 @@
  
 package edu.rosehulman.sws.extension;
 
-import edu.rosehulman.sws.protocol.IHTTPRequest;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.IHttpRequest;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 
 /**
  * 
  * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
 public interface IServlet {
-	public void process(IHTTPRequest request, IHTTPResponse response);
+	public void process(IHttpRequest request, IHttpResponse response);
 }

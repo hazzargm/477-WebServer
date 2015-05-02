@@ -135,13 +135,13 @@ public class Server implements Runnable {
 	 */
 	public void run() {
 		loader.loadAllPlugins();
-		try {
-			loader.watchPlugins();
-			
+		try {			
 			this.welcomeSocket = new ServerSocket(port);
+			new Thread(new PluginLoaderThreadRunnable(loader)).start();
 			
 			// Now keep welcoming new connections until stop flag is set to true
 			while(true) {
+				
 				// Listen for incoming socket connection
 				// This method block until somebody makes a request
 				Socket connectionSocket = this.welcomeSocket.accept();
@@ -201,5 +201,12 @@ public class Server implements Runnable {
 	
 	public void uninstallPlugin(String pluginDomain) {
 		plugins.remove(pluginDomain);
+	}
+	
+	public IPlugin getPlugin(String pluginDomain) {
+		if(plugins.containsKey(pluginDomain)) {
+			return plugins.get(pluginDomain);
+		}
+		return null;
 	}
 }

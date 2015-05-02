@@ -28,8 +28,8 @@
  
 package edu.rosehulman.sws.extension;
 
-import edu.rosehulman.sws.protocol.IHTTPRequest;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.IHttpRequest;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 
 /**
  * 
@@ -38,7 +38,7 @@ import edu.rosehulman.sws.protocol.IHTTPResponse;
 public interface IPlugin {
 	public static String ROUTE_FILE_NAME = "routes.txt";
 	
-	public void route(IHTTPRequest request, IHTTPResponse response);
+	public void route(IHttpRequest request, IHttpResponse response);
 	public void loadServlets(String rootDir);
 	public String getDomain();
 	public IPlugin getPlugin();

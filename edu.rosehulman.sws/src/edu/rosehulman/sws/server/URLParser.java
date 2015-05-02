@@ -29,7 +29,6 @@
 package edu.rosehulman.sws.server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -41,8 +40,7 @@ import edu.rosehulman.sws.impl.HTTPRequests.DELRequest;
 import edu.rosehulman.sws.impl.HTTPRequests.GETRequest;
 import edu.rosehulman.sws.impl.HTTPRequests.POSTRequest;
 import edu.rosehulman.sws.impl.HTTPRequests.PUTRequest;
-import edu.rosehulman.sws.protocol.IHTTPRequest;
-import edu.rosehulman.sws.protocol.IProtocol;
+import edu.rosehulman.sws.protocol.IHttpRequest;
 import edu.rosehulman.sws.protocol.ProtocolException;
 
 /**
@@ -57,7 +55,7 @@ public class URLParser {
 	private static char[] body;
 	private static Map<String, String> bodyHeader;
 
-	public static IHTTPRequest parseIncomingRequest(InputStream inputStream)
+	public static IHttpRequest parseIncomingRequest(InputStream inputStream)
 			throws Exception {
 		// We will fill this object with the data from input stream and return
 		// it
@@ -136,7 +134,7 @@ public class URLParser {
 		return generateRequest();
 	}
 
-	private static IHTTPRequest generateRequest() {
+	private static IHttpRequest generateRequest() {
 		switch (method) {
 		case Protocol.GET:
 			return new GETRequest(uri, version, header);
@@ -150,6 +148,19 @@ public class URLParser {
 		default:
 			return null;
 		}
+	}
+	
+	// uri = /MyPlugin/MyServlet
+	public static String getPluginDomain(String uri) {
+		StringTokenizer tokenizer = new StringTokenizer(uri, "/"); 
+		return tokenizer.nextToken(); // Plugin Domain
+	}
+	
+	// uri = /MyPlugin/MyServlet
+	public static String getServletDomain(String uri) {
+		StringTokenizer tokenizer = new StringTokenizer(uri, "/");
+		tokenizer.nextToken(); // Plugin Domain
+		return tokenizer.nextToken(); //Servlet Domain
 	}
 
 	private static void fillBodyHeader() {
@@ -169,7 +180,7 @@ public class URLParser {
 //					+ bodyHeader.get(s) + "}");
 //		}
 //		System.out.println("##################");
-	}
+	}	
 
 	//TODO: THIS METHOD MIGHT BE WINDOWS SPECIFIC
 	private static int getBodyHeaderHelper1(int index, String key,

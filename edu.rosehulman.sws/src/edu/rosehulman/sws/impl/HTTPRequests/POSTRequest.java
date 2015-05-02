@@ -37,15 +37,15 @@ import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.impl.RequestActions.WriteAction;
-import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpRequest;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
-public class POSTRequest extends AbstractHTTPRequest {
+public class POSTRequest extends AbstractHttpRequest {
 	
 	public POSTRequest(String uri, String version, Map<String,String> header, char[] body, Map<String, String> bodyHeader) {
 		this.method = Protocol.POST;
@@ -60,15 +60,15 @@ public class POSTRequest extends AbstractHTTPRequest {
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
 	 */
 	@Override
-	public void handleRequest(Server server, OutputStream outStream, long start) {
+	public void handleRequest() {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
 		
 		// Create type ErrorResponse and verify that the response is not an error
-		File file = lookup(server, true, null);
+		File file = lookup(true, null);
 		
 		if (!response.isError()) {
-			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
+			this.response.setFile(AbstractHttpResponse.createTempResponseFile());
 			// pass in false so that file is overwritten
 			WriteAction writeAction = new WriteAction(response, server, file, this.body, false);
 			response = writeAction.performAction();
@@ -76,7 +76,7 @@ public class POSTRequest extends AbstractHTTPRequest {
 		
 		try {
 			System.out.println(response);
-			response.write(outStream);
+			response.write(out);
 			// Increment number of connections by 1
 			server.incrementConnections(1);
 			// Get the end time

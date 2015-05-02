@@ -38,15 +38,15 @@ import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.DeleteAction;
 import edu.rosehulman.sws.impl.RequestActions.ReadAction;
 import edu.rosehulman.sws.impl.RequestActions.WriteAction;
-import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpRequest;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
-public class DELRequest extends AbstractHTTPRequest {
+public class DELRequest extends AbstractHttpRequest {
 
 	public DELRequest(String uri, String version, Map<String,String> header) {
 		this.method = Protocol.POST;
@@ -59,24 +59,24 @@ public class DELRequest extends AbstractHTTPRequest {
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
 	 */
 	@Override
-	public void handleRequest(Server server, OutputStream outStream, long start) {
+	public void handleRequest() {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
 		System.out.println("LOOKUP START");
 		// Create type ErrorResponse and verify that the response is not an error
-		File file = lookup(server, false, null);
+		File file = lookup(false, null);
 		
 		System.out.println("LOOKUP END");
 		
 		if (!response.isError()) {
-			this.response.setFile(AbstractHTTPResponse.createTempResponseFile());
+			this.response.setFile(AbstractHttpResponse.createTempResponseFile());
 			// pass in true so that file is appended to
 			DeleteAction deleteAction = new DeleteAction(response, file);
 			response = deleteAction.performAction();
 		}
 		
 		try {
-			response.write(outStream);
+			response.write(out);
 			// Increment number of connections by 1
 			server.incrementConnections(1);
 			// Get the end time

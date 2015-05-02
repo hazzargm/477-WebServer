@@ -39,12 +39,12 @@ import java.net.URLConnection;
 import java.util.HashMap;
 
 import edu.rosehulman.sws.impl.Protocol;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
 
 /**
  * 
  */
-public class Response404NotFound extends AbstractHTTPResponse {
+public class Response404NotFound extends AbstractHttpResponse {
 
 	public Response404NotFound(String version, File file) {
 		this.version = version;
@@ -54,13 +54,19 @@ public class Response404NotFound extends AbstractHTTPResponse {
 		this.file = file;
 	}
 	
+	public Response404NotFound() {
+		this.code = Protocol.NOT_FOUND_CODE;
+		this.phrase = Protocol.NOT_FOUND_TEXT;
+		this.header = new HashMap<String,String>();
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.rosehulman.sws.protocol.IHTTPResponse#write(java.io.OutputStream)
 	 */
 	@Override
 	public void write(OutputStream outStream) {
 		if(file == null) {
-			file = AbstractHTTPResponse.createTempResponseFile();
+			file = AbstractHttpResponse.createTempResponseFile();
 		}
 	
 		// Lets get content length in bytes

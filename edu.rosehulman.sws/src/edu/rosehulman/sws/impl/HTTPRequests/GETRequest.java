@@ -35,15 +35,15 @@ import java.util.Map;
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.impl.RequestActions.ReadAction;
-import edu.rosehulman.sws.protocol.AbstractHTTPRequest;
-import edu.rosehulman.sws.protocol.AbstractHTTPResponse;
-import edu.rosehulman.sws.protocol.IHTTPResponse;
+import edu.rosehulman.sws.protocol.AbstractHttpRequest;
+import edu.rosehulman.sws.protocol.AbstractHttpResponse;
+import edu.rosehulman.sws.protocol.IHttpResponse;
 import edu.rosehulman.sws.server.Server;
 
 /**
  * 
  */
-public class GETRequest extends AbstractHTTPRequest {
+public class GETRequest extends AbstractHttpRequest {
 	
 	public GETRequest(String uri, String version, Map<String,String> header) {
 		this.method = Protocol.GET;
@@ -56,11 +56,11 @@ public class GETRequest extends AbstractHTTPRequest {
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#handleRequest()
 	 */
 	@Override
-	public void handleRequest(Server server, OutputStream outStream, long start) {
+	public void handleRequest() {
 		String date = header.get("if-modified-since"); //TODO: put in protocol
 		String hostName = header.get("host"); //TODO: put in protocol
 		
-		File file = lookup(server, false, null);
+		File file = lookup(false, null);
 		
 		if (!response.isError()) {
 			ReadAction readAction = new ReadAction(response, file);
@@ -68,7 +68,7 @@ public class GETRequest extends AbstractHTTPRequest {
 		}
 
 		try {
-			response.write(outStream);
+			response.write(out);
 			// Increment number of connections by 1
 			server.incrementConnections(1);
 			// Get the end time

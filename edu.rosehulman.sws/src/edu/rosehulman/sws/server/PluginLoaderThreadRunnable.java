@@ -1,6 +1,6 @@
 /*
- * IHTTPResponse.java
- * Apr 22, 2015
+ * PluginLoaderThreadRunnable.java
+ * May 1, 2015
  *
  * Simple Web Server (SWS) for EE407/507 and CS455/555
  * 
@@ -26,27 +26,32 @@
  * http://clarkson.edu/~rupakhcr
  */
  
-package edu.rosehulman.sws.protocol;
+package edu.rosehulman.sws.server;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * 
+ * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
-public interface IHTTPResponse {
-
-	public void write(OutputStream outStream) throws Exception;
-	public void put(String key, String value);
-	public void fillGeneralHeader(String close);
+public class PluginLoaderThreadRunnable implements Runnable {
 	
-	public String getVersion();
-	public int getCode();
-	public String getPhrase();
-	public File getFile();
-	public Map<String, String> getHeader();
-	public boolean isError();
-	public void setFile(File createTempFile);
+	private PluginLoader pluginLoader;
+	
+	public PluginLoaderThreadRunnable(PluginLoader pluginLoader) {
+		this.pluginLoader = pluginLoader;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		try {
+			this.pluginLoader.watchPlugins();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

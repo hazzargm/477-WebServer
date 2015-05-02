@@ -131,8 +131,9 @@ public class PluginLoader {
 				}
 				if(plugin != null) {
 					server.installPlugin(plugin);
+					System.out.println("----------------------PLUGIN: " + pluginName + " Installed----------------------");
 				} else {
-					System.out.println("----------------------PLUGIN " + pluginName + " COULD NOT BE LOADED----------------------");
+					System.out.println("----------------------PLUGIN: " + pluginName + " COULD NOT BE LOADED----------------------");
 				}
 				
 			}

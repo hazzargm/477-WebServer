@@ -42,7 +42,7 @@ import edu.rosehulman.sws.impl.Protocol;
 /**
  * 
  */
-public abstract class AbstractHTTPResponse implements IHTTPResponse {
+public abstract class AbstractHttpResponse implements IHttpResponse {
 
 	protected String version;
 	protected int code;
@@ -67,6 +67,10 @@ public abstract class AbstractHTTPResponse implements IHTTPResponse {
 	 */
 	public void setFile(File file) {
 		this.file = file;
+	}
+	
+	public void setVersion(String version) {
+		this.version = version;
 	}
 	
 	/**
