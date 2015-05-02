@@ -96,7 +96,6 @@ public class ConnectionHandler implements Runnable {
 		// Now lets create a HttpRequest object
 		IHttpRequest request = null;
 		try {
-			// Chandan's code: request1 = HttpRequest.read(inStream);
 			request = URLParser.parseIncomingRequest(inStream);
 			request.setCallback(server, outStream, start);
 			this.distributeRequest(request);

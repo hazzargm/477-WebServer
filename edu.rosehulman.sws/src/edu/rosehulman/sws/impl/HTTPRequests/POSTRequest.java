@@ -47,13 +47,12 @@ import edu.rosehulman.sws.server.Server;
  */
 public class POSTRequest extends AbstractHttpRequest {
 	
-	public POSTRequest(String uri, String version, Map<String,String> header, char[] body, Map<String, String> bodyHeader) {
+	public POSTRequest(String uri, String version, Map<String,String> header, char[] body) {
 		this.method = Protocol.POST;
 		this.uri = uri;
 		this.version = version;
 		this.header = header;
 		this.body = body;
-		this.bodyHeader = bodyHeader;
 	}
 
 	/* (non-Javadoc)

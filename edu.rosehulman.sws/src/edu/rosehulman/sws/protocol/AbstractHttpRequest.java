@@ -94,7 +94,7 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 		return body;
 	}
 	
-	public OutputStream getOutputStream() {
+	public OutputStream getClientOutputStream() {
 		return this.out;
 	}
 	
@@ -105,7 +105,7 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	public long getStart() {
 		return this.start;
 	}
-
+	
 	/**
 	 * The key to value mapping in the request header fields.
 	 * 
@@ -135,7 +135,6 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	private File findFile(Server server, boolean ensureFileCreation, String fileName) {
 		// Get root directory path from server
 		String rootDirectory = server.getRootDirectory();
-		
 		// normalize optional filename
 		if (fileName == null) {
 			fileName = "";
@@ -145,7 +144,6 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 		
 		// Combine them together to form absolute file path
 		File file = new File(SpringUtilities.combine(rootDirectory, uri) + fileName);
-		
 		// Check if the file exists
 		if (file.exists()) {
 			System.out.println("FILE EXISTS");

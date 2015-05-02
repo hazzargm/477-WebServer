@@ -50,9 +50,9 @@ import edu.rosehulman.sws.server.URLParser;
  */
 public abstract class AbstractPlugin implements IPlugin {
 	
-	private final String domain = ""; //This will be some constant in all conrete plugin implementations
-	private Map<String, IServlet> servletMap;
-	private String rootDir;
+	protected final String domain = ""; //This will be some constant in all concrete plugin implementations
+	protected Map<String, IServlet> servletMap;
+	protected String rootDir;
 	
 	public static String getServeltRouteKey(String method, String uri) {
 		return (method + uri).toLowerCase();

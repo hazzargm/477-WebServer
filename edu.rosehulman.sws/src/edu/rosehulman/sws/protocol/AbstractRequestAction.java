@@ -44,6 +44,10 @@ public abstract class AbstractRequestAction implements IRequestAction {
 	protected Server server;
 
 	protected char[] getFileBody() { //TODO: currently this cuts off the last line of the body if it is a blank line
+		if (body == null) {
+			System.out.println("RETURN A BAD RESPONSE");
+			int x = body.length; //throws exception
+		}
 		String bodyString = charArrayToString(body, 0);
 		System.out.println("##############" + bodyString + "##############\n");
 		String[] lines = bodyString.split(System.getProperty("line.separator"));

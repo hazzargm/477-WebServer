@@ -53,7 +53,7 @@ public class URLParser {
 	private static String version;
 	private static Map<String, String> header;
 	private static char[] body;
-	private static Map<String, String> bodyHeader;
+	//private static Map<String, String> bodyHeader;
 
 	public static IHttpRequest parseIncomingRequest(InputStream inputStream)
 			throws Exception {
@@ -141,10 +141,9 @@ public class URLParser {
 		case Protocol.DELETE:
 			return new DELRequest(uri, version, header);
 		case Protocol.POST:
-			fillBodyHeader();
-			return new POSTRequest(uri, version, header, body, bodyHeader);
+			return new POSTRequest(uri, version, header, body);
 		case Protocol.PUT:
-			return new PUTRequest(uri, version, header, body, bodyHeader);
+			return new PUTRequest(uri, version, header, body);
 		default:
 			return null;
 		}
@@ -152,17 +151,65 @@ public class URLParser {
 	
 	// uri = /MyPlugin/MyServlet
 	public static String getPluginDomain(String uri) {
-		StringTokenizer tokenizer = new StringTokenizer(uri, "/"); 
-		return tokenizer.nextToken(); // Plugin Domain
+		StringTokenizer tokenizer = new StringTokenizer(uri, "/");
+		if(tokenizer.hasMoreTokens()) {
+			return tokenizer.nextToken(); // Plugin Domain
+		}
+		return null;
 	}
 	
 	// uri = /MyPlugin/MyServlet
 	public static String getServletDomain(String uri) {
 		StringTokenizer tokenizer = new StringTokenizer(uri, "/");
-		tokenizer.nextToken(); // Plugin Domain
-		return tokenizer.nextToken(); //Servlet Domain
+		if(tokenizer.hasMoreTokens()) {
+			tokenizer.nextToken(); // Plugin Domain
+		}
+		if(tokenizer.hasMoreTokens()) {
+			return tokenizer.nextToken(); //Servlet Domain
+		}
+		return null;
 	}
-
+	
+	public static boolean hasPostParameters(char[] postBody) {
+		return postBody != null && postBody.length > 0;
+	}
+	
+	/*
+	 * @param: postBody is the char array representing the body of a post request
+	 * @return: returns a map of all the inputted parameters in the post request
+	 */
+	public static Map<String, String> getPostParameters(char[] postBody) {
+		Map<String, String> parameters = new HashMap<String, String>();
+		String key = "";
+		String value = "";
+		StringTokenizer tokenizer;
+		//Get an array of the segments in between the boundaries of the post request
+		String[] segments = charArrayToString(postBody).split(getBoundary(postBody));
+		String[] segmentLines;
+		for(int i = 1; i < segments.length; i++) {
+			tokenizer = new StringTokenizer(segments[i], "\"");
+			tokenizer.nextToken();
+			key = tokenizer.nextToken();
+			segmentLines = segments[i].split("\n");
+			value = segmentLines[3].substring(0, segmentLines[3].length() - 1);
+		parameters.put(key, value);
+		}
+		for (String s : parameters.keySet()) {
+		System.out.println("{key:" + s + "} -> " + "{value:"
+				+ parameters.get(s) + "}");
+	}
+		return parameters;
+	}
+	
+	private static String charArrayToString(char[] array) {
+		String s = "";
+		for (int index = 0; index < array.length; index++) {
+			s += array[index];
+		}
+		return s;
+	}
+	
+	/*
 	private static void fillBodyHeader() {
 		bodyHeader = new HashMap<String, String>();
 //		System.out.println("##################");
@@ -182,7 +229,7 @@ public class URLParser {
 //		System.out.println("##################");
 	}	
 
-	//TODO: THIS METHOD MIGHT BE WINDOWS SPECIFIC
+	//THIS METHOD MIGHT BE WINDOWS SPECIFIC
 	private static int getBodyHeaderHelper1(int index, String key,
 			char delimeter) {
 		index += 2;
@@ -199,7 +246,7 @@ public class URLParser {
 		return index;
 	}
 
-	//TODO: THIS METHOD MIGHT BE WINDOWS SPECIFIC
+	// THIS METHOD MIGHT BE WINDOWS SPECIFIC
 	private static int getBodyHeaderHelper2(int index, String key,
 			char delimeter) {
 		index += 2;
@@ -217,31 +264,19 @@ public class URLParser {
 		bodyHeader.put(key, value);
 		return index;
 	}
-
-	private static void addBoundary() {
-		// if other requests need to be able to
-		// do this
-		String boundary = "";
-		String contentType = header.get(Protocol.CONTENT_TYPE.toLowerCase());
-		System.out.println(contentType);
-		char[] cType = contentType.toCharArray();
-		int i = 1;
-		char c = cType[0];
-		while (c != '=') {
-			c = cType[i];
-			i++;
-		}
-		for (int j = i; j < cType.length; j++) {
-			boundary += cType[j];
-		}
-		bodyHeader.put(Protocol.BODY_BOUNDARY, boundary);
+*/
+	private static String getBoundary(char[] body) {
+		String bodyString = charArrayToString(body);
+		String[] lines = bodyString.split("\n");
+		return lines[0];
 	}
 
-	private static String charArrayToString(char[] array, int start) {
-		String s = "";
-		for (int index = start; index < array.length; index++) {
-			s += array[index];
-		}
-		return s;
-	}
+//	private static String charArrayToString(char[] array, int start) {
+//		String s = "";
+//		for (int index = start; index < array.length; index++) {
+//			s += array[index];
+//		}
+//		return s;
+//	}
+
 }

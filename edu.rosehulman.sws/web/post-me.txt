@@ -1,4 +1,0 @@
-This is a new text file
-This is line 2
-
-a blank above and one below

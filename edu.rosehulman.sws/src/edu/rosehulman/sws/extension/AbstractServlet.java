@@ -28,6 +28,9 @@
  
 package edu.rosehulman.sws.extension;
 
+import java.io.PrintWriter;
+
+import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.protocol.IHttpRequest;
 import edu.rosehulman.sws.protocol.IHttpResponse;
 
@@ -36,10 +39,56 @@ import edu.rosehulman.sws.protocol.IHttpResponse;
  * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
 public abstract class AbstractServlet implements IServlet {
-	private IHttpRequest request;
-	private IHttpResponse response;
+	protected IHttpRequest request;
+	protected IHttpResponse response;
+	protected PrintWriter writer;
 	
 	public void process(IHttpRequest request, IHttpResponse response) {
-		
-	}
+        response.put(Protocol.CONTENT_TYPE, ("text/html;charset=UTF-8"));
+        this.writer = new PrintWriter(request.getClientOutputStream());
+    }
+	
+	
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     */
+    protected void doGet(IHttpRequest request, IHttpResponse response) {
+        process(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     */
+    protected void doPost(IHttpRequest request, IHttpResponse response) {
+        process(request, response);
+    }
+    
+    /**
+     * Handles the HTTP <code>PUT</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     */
+    protected void doPut(IHttpRequest request, IHttpResponse response) {
+        process(request, response);
+    }
+    
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     */
+    protected void doDel(IHttpRequest request, IHttpResponse response) {
+        process(request, response);
+    }
+
 }

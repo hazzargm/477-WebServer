@@ -47,4 +47,7 @@ public interface IHttpRequest {
 	public String getVersion();
 	public char[] getBody();
 	public Map<String, String> getHeader();	
+	public OutputStream getClientOutputStream();
+	public Server getServer();
+	public long getStart();
 }

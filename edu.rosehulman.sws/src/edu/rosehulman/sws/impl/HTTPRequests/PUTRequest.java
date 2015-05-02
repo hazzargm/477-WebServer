@@ -47,7 +47,7 @@ import edu.rosehulman.sws.server.Server;
 public class PUTRequest extends AbstractHttpRequest {
 
 	public PUTRequest(String uri, String version, Map<String, String> header,
-			char[] body, Map<String, String> bodyHeader) {
+			char[] body) {
 		this.method = Protocol.PUT;
 		this.uri = uri;
 		this.version = version;

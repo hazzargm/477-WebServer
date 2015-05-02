@@ -37,4 +37,8 @@ import edu.rosehulman.sws.protocol.IHttpResponse;
  */
 public interface IServlet {
 	public void process(IHttpRequest request, IHttpResponse response);
+//	public void doGet(IHttpRequest request, IHttpResponse response);
+//	public void doPost(IHttpRequest request, IHttpResponse response);
+//	public void doPut(IHttpRequest request, IHttpResponse response);
+//	public void doDel(IHttpRequest request, IHttpResponse response);
 }
