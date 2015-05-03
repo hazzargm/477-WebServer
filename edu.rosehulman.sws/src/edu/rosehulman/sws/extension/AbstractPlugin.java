@@ -30,14 +30,14 @@ package edu.rosehulman.sws.extension;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.print.attribute.HashAttributeSet;
 
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.protocol.IHttpRequest;
@@ -50,44 +50,56 @@ import edu.rosehulman.sws.server.URLParser;
  */
 public abstract class AbstractPlugin implements IPlugin {
 	
-	protected final String domain = ""; //This will be some constant in all concrete plugin implementations
+	protected String domain = ""; //This will be some constant in all concrete plugin implementations
 	protected Map<String, IServlet> servletMap;
-	protected String rootDir;
+	protected String servletDir;
+	
+	public AbstractPlugin() {
+		loadServlets("servlets");
+	}
 	
 	public static String getServeltRouteKey(String method, String uri) {
 		return (method + uri).toLowerCase();
 	}
 	
-	public void loadServlets(String rootDir) {
-		this.rootDir = rootDir;
+	public void loadServlets(String servletDir) {
+		this.servletDir = servletDir;
+		System.out.println("LOAD SERVLETS");
+		
 		// lookup route file for specific plugin domain
-		String routeFilePath = rootDir + File.separator + getDomain() + IPlugin.ROUTE_FILE_NAME;
-		File routeFile = new File(routeFilePath);
+		InputStream in = getClass().getResourceAsStream(File.separator + IPlugin.ROUTE_FILE_NAME); 
 		this.servletMap = new HashMap<String, IServlet>();
 		 
 		try {
 			// load each line entry of route file into map
-			BufferedReader br = new BufferedReader(new FileReader(routeFile));  
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));  
 			String line = null;
 			while ((line = br.readLine()) != null)  
 			{  
+				System.out.println("ROUTE LOADED: " + line);
 				parseRouteLine(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 	
 	private void parseRouteLine(String line) {
 		// split line on any amount of white space in between parts
 		String[] routeParts = line.split("\\s+");
-		String routeKey = getServeltRouteKey(routeParts[0], routeParts[1]);
+		String path = routeParts[0].replaceAll(".*[/\\\\].*", File.separator);
+		String routeKey = getServeltRouteKey(path, routeParts[1]);
 		String routeServletClass = routeParts[2];
+		
+		System.out.println("GET CLASS - " + getClass());
 		
 		// create new servlet instance frome routeServlet name
 		Class<?> servletClass;
 		try {
-			servletClass = Class.forName(routeServletClass);
+			System.out.println("FIND CLASS - " + routeServletClass);
+			ClassLoader classLoader = new URLClassLoader(new URL[]{new URL("path/to/the/jar/file.jar")});
+			servletClass = classLoader.loadClass(routeServletClass);
+			System.out.println("DONE");
 			Constructor<?> servletConstructor = servletClass.getConstructor(String.class);
 			IServlet servlet = (IServlet) servletConstructor.newInstance();
 			this.servletMap.put(routeKey, servlet);
@@ -107,7 +119,10 @@ public abstract class AbstractPlugin implements IPlugin {
 	
 	public void route(IHttpRequest request, IHttpResponse response) {
 		String servletName = URLParser.getServletDomain(request.getUri());
-		IServlet s = servletMap.get(servletName);
+		String servletMapKey = getServeltRouteKey(request.getMethod(), servletName);
+		System.out.println("NEXT - "+ servletMapKey);
+		IServlet s = servletMap.get(servletMapKey);
+
 		if(s != null) {
 			s.process(request, new Response200OK());
 		} else {

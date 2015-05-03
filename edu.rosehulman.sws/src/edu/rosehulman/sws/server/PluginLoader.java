@@ -35,15 +35,8 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-import java.awt.Dimension;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -51,11 +44,6 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-
-import javax.swing.JPanel;
 
 import edu.rosehulman.sws.extension.IPlugin;
  
@@ -102,31 +90,16 @@ public class PluginLoader {
 		server.uninstallPlugin(pluginDomain);
 	}
     
-	@SuppressWarnings({ "resource", "deprecation" })
 	public void launchPlugin(String pluginName) {
 		IPlugin plugin = null;
 		File[] filesList = this.pluginDir.listFiles();
 		for (File file : filesList) {
 			if(file.isFile() && file.getName().equalsIgnoreCase(pluginName)) {
 				try {
-					URL[] classLoaderURLs = {file.toURL()};
-					URLClassLoader classLoader = new URLClassLoader(classLoaderURLs);
-					Manifest m = new JarFile(file.toString()).getManifest();
-					Attributes attr = m.getMainAttributes();
-					String val = attr.getValue(PLUGIN_KEY);
-					Class<?> pluginClass = classLoader.loadClass(val);
+					plugin = (IPlugin) URLParser.extractClassFromJar(file, PLUGIN_KEY, "getPlugin");;
 					
-					// Create a new instance from the loaded class
-					Constructor<?> constructor = pluginClass.getConstructor();
-					
-					Object pluginObj = constructor.newInstance();
-					
-					// Getting a method from the loaded class and invoke it
-					Method method = pluginClass.getMethod("getPlugin");
-					Object plug = method.invoke(pluginObj);
-					plugin = (IPlugin) plug;
-
 				} catch (Exception e) {
+					e.printStackTrace();
 					// Do Nothing! :)
 				}
 				if(plugin != null) {

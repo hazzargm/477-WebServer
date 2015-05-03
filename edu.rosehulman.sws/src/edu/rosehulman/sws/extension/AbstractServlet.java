@@ -44,11 +44,17 @@ public abstract class AbstractServlet implements IServlet {
 	protected PrintWriter writer;
 	
 	public void process(IHttpRequest request, IHttpResponse response) {
+		this.request = request;
+		this.response = response;
         response.put(Protocol.CONTENT_TYPE, ("text/html;charset=UTF-8"));
         this.writer = new PrintWriter(request.getClientOutputStream());
+        serve();
+        this.writer.close();
     }
 	
-	
+	public IServlet getIServlet() {
+		return this;
+	}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

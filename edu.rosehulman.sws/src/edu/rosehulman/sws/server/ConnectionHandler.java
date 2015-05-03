@@ -115,8 +115,10 @@ public class ConnectionHandler implements Runnable {
 		String pluginDomain = URLParser.getPluginDomain(request.getUri());
 		IPlugin p = server.getPlugin(pluginDomain);
 		if(p != null) {
+			System.out.println("PLUGIN FOUND");
 			p.route(request, new Response200OK());
 		} else {
+			System.out.println("NO-PLUGIN FOUND");
 			request.handleRequest();
 		}
 	}

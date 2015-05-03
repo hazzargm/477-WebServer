@@ -1,6 +1,9 @@
+import edu.rosehulman.sws.extension.AbstractPlugin;
+import edu.rosehulman.sws.extension.IPlugin;
+
 /*
- * IServlet.java
- * Apr 30, 2015
+ * mccormjt.java
+ * May 3, 2015
  *
  * Simple Web Server (SWS) for EE407/507 and CS455/555
  * 
@@ -26,20 +29,15 @@
  * http://clarkson.edu/~rupakhcr
  */
  
-package edu.rosehulman.sws.extension;
-
-import edu.rosehulman.sws.protocol.IHttpRequest;
-import edu.rosehulman.sws.protocol.IHttpResponse;
 
 /**
  * 
  * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
-public interface IServlet {
-	public void process(IHttpRequest request, IHttpResponse response);
-	public void serve();
-//	public void doGet(IHttpRequest request, IHttpResponse response);
-//	public void doPost(IHttpRequest request, IHttpResponse response);
-//	public void doPut(IHttpRequest request, IHttpResponse response);
-//	public void doDel(IHttpRequest request, IHttpResponse response);
+public class PluginMccormjt extends AbstractPlugin implements IPlugin {
+
+	public PluginMccormjt() {
+		super();
+		this.domain = "mccormjt";
+	}
 }

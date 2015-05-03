@@ -29,11 +29,19 @@
 package edu.rosehulman.sws.server;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPRequests.DELRequest;
@@ -54,6 +62,33 @@ public class URLParser {
 	private static Map<String, String> header;
 	private static char[] body;
 	//private static Map<String, String> bodyHeader;
+	
+	@SuppressWarnings({ "resource", "deprecation" })
+	public static Object extractClassFromJar(File file, String classNameAttrKey, String classGetterMethod) {
+		Object classObj = null;
+		
+		try {			
+			URL[] classLoaderURLs = {file.toURL()};
+			URLClassLoader classLoader = new URLClassLoader(classLoaderURLs);
+			Manifest m = new JarFile(file.toString()).getManifest();
+			Attributes attr = m.getMainAttributes();
+			String className = attr.getValue(classNameAttrKey);
+			Class<?> pluginClass = classLoader.loadClass(className);
+			// Create a new instance from the loaded class
+			Constructor<?> constructor = pluginClass.getConstructor();
+			Object pluginObj = constructor.newInstance();
+			
+			// Getting a method from the loaded class and invoke it
+			Method method = pluginClass.getMethod(classGetterMethod);
+			classObj = method.invoke(pluginObj);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			// Do Nothing! :)
+		}
+		
+		return classObj;
+	}
 
 	public static IHttpRequest parseIncomingRequest(InputStream inputStream)
 			throws Exception {

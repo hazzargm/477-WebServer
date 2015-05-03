@@ -21,11 +21,6 @@
  
 package edu.rosehulman.sws.server;
 
-import edu.rosehulman.sws.extension.AbstractPlugin;
-import edu.rosehulman.sws.extension.AbstractServlet;
-import edu.rosehulman.sws.extension.IPlugin;
-import edu.rosehulman.sws.gui.WebServer;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -33,6 +28,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+
+import edu.rosehulman.sws.extension.IPlugin;
+import edu.rosehulman.sws.gui.WebServer;
 
 /**
  * This represents a welcoming server for the incoming
