@@ -41,6 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.protocol.IHttpRequest;
 import edu.rosehulman.sws.protocol.IHttpResponse;
@@ -143,7 +145,7 @@ public abstract class AbstractPlugin implements IPlugin {
 		List<String> keyParts = Arrays.asList(servletKey.split("/"));
 		IServlet servlet = null;
 		for (int i = keyParts.size(); i > 0; i--) {
-			String key = String.join("/", keyParts.subList(0, i));
+			String key = StringUtils.join(keyParts.subList(0, i), "/");
 			System.out.println("KEY CHECK: " + key);
 			servlet = this.servletMap.get(key);
 			if (servlet != null) break;
