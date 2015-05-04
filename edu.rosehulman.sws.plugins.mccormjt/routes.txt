@@ -1,1 +1,1 @@
-GET		/home		HomeServlet
+GET		/home		servlets.HomeServlet

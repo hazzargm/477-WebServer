@@ -97,11 +97,14 @@ public abstract class AbstractPlugin implements IPlugin {
 		Class<?> servletClass;
 		try {
 			System.out.println("FIND CLASS - " + routeServletClass);
-			ClassLoader classLoader = new URLClassLoader(new URL[]{new URL("path/to/the/jar/file.jar")});
+			URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
+	        System.out.println("PATH - " + location.getFile().toString());
+			ClassLoader classLoader = new URLClassLoader(new URL[]{new File(location.getFile()).toURI().toURL()});
 			servletClass = classLoader.loadClass(routeServletClass);
 			System.out.println("DONE");
-			Constructor<?> servletConstructor = servletClass.getConstructor(String.class);
-			IServlet servlet = (IServlet) servletConstructor.newInstance();
+			Constructor<?> servletConstructor = servletClass.getConstructor();
+			Object servletObj = servletConstructor.newInstance();
+			IServlet servlet = (IServlet) servletObj;
 			this.servletMap.put(routeKey, servlet);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
