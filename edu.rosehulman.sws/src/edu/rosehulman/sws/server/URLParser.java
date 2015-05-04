@@ -203,11 +203,34 @@ public class URLParser {
 		return postBody != null && postBody.length > 0;
 	}
 	
+	public static Map<String, String> getPostParameters(char[] postBody) {
+		Map<String, String> parameters;
+		parameters = getPostmanParameters(postBody);
+		if(parameters.keySet().size() < 1) {
+			parameters = getBroswerParameters(postBody);
+		}
+//		for (String s : parameters.keySet()) {
+//			System.out.println("{key:" + s + "} -> " + "{value:"
+//				+ parameters.get(s) + "}");
+//		}
+		return parameters;
+	}
+	
+	public static Map<String, String> getBroswerParameters(char[] postBody) {
+		Map<String, String> parameters = new HashMap<String, String>();
+		String[] params = charArrayToString(postBody).split("&");
+		String[] pairs;
+		for(String s: params) {
+			pairs = s.split("=");
+			parameters.put(pairs[0], pairs[1]);
+		}
+		return parameters;
+	}
 	/*
 	 * @param: postBody is the char array representing the body of a post request
 	 * @return: returns a map of all the inputted parameters in the post request
 	 */
-	public static Map<String, String> getPostParameters(char[] postBody) {
+	public static Map<String, String> getPostmanParameters(char[] postBody) {
 		Map<String, String> parameters = new HashMap<String, String>();
 		String key = "";
 		String value = "";
@@ -221,12 +244,11 @@ public class URLParser {
 			key = tokenizer.nextToken();
 			segmentLines = segments[i].split("\n");
 			value = segmentLines[3].substring(0, segmentLines[3].length() - 1);
-		parameters.put(key, value);
+			if(key == null || value == null){
+				return null;
+			}
+			parameters.put(key, value);
 		}
-		for (String s : parameters.keySet()) {
-		System.out.println("{key:" + s + "} -> " + "{value:"
-				+ parameters.get(s) + "}");
-	}
 		return parameters;
 	}
 	
