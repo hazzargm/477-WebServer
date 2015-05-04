@@ -67,7 +67,7 @@ public abstract class AbstractPlugin implements IPlugin {
 		System.out.println("LOAD SERVLETS");
 		
 		// lookup route file for specific plugin domain
-		InputStream in = getClass().getResourceAsStream(File.separator + IPlugin.ROUTE_FILE_NAME); 
+		InputStream in = getClass().getResourceAsStream(IPlugin.ROUTE_FILE_NAME); 
 		this.servletMap = new HashMap<String, IServlet>();
 		 
 		try {
@@ -96,12 +96,9 @@ public abstract class AbstractPlugin implements IPlugin {
 		// create new servlet instance frome routeServlet name
 		Class<?> servletClass;
 		try {
-			System.out.println("FIND CLASS - " + routeServletClass);
 			URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
-	        System.out.println("PATH - " + location.getFile().toString());
 			ClassLoader classLoader = new URLClassLoader(new URL[]{new File(location.getFile()).toURI().toURL()});
 			servletClass = classLoader.loadClass(routeServletClass);
-			System.out.println("DONE");
 			Constructor<?> servletConstructor = servletClass.getConstructor();
 			Object servletObj = servletConstructor.newInstance();
 			IServlet servlet = (IServlet) servletObj;
@@ -123,12 +120,13 @@ public abstract class AbstractPlugin implements IPlugin {
 	public void route(IHttpRequest request, IHttpResponse response) {
 		String servletName = URLParser.getServletDomain(request.getUri());
 		String servletMapKey = getServeltRouteKey(request.getMethod(), servletName);
-		System.out.println("NEXT - "+ servletMapKey);
 		IServlet s = servletMap.get(servletMapKey);
 
 		if(s != null) {
+			System.out.println("FOUND SERVLET = " + servletMapKey);
 			s.process(request, new Response200OK());
 		} else {
+			System.out.println("SERVLET NOT FOUND!!! - "+ servletMapKey);
 			// TODO Return whatever error response for accesses a bad servlet (404 not found?)
 		}
 	}

@@ -11,6 +11,7 @@ public class HomeServlet extends AbstractServlet implements IServlet {
 	}
 
 	public void serve() {
+		System.out.println("HOME SERVLET");
 		this.writer.write("<h1>Welcome to John McCormack's Home Page!</h1>");
 		this.writer.write("<hr/>");
 		this.writer.write("<p>I cannot wait to graduate :)</p>");
