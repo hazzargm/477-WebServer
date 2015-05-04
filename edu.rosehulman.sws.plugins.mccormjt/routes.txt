@@ -4,3 +4,4 @@ GET		/home/hello/duplicate		servlets.HomeServlet
 GET		/form						servlets.FormServlet
 POST	/form/result				servlets.FormResultServlet
 DELETE  /delete						servlets.DeleteServlet
+PUT     /update						servlets.PutServlet

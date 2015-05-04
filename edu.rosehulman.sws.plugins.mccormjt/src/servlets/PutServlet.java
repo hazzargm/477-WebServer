@@ -7,9 +7,9 @@ import java.util.List;
 import edu.rosehulman.sws.extension.AbstractServlet;
 import edu.rosehulman.sws.extension.IServlet;
 
-public class DeleteServlet extends AbstractServlet implements IServlet {
+public class PutServlet extends AbstractServlet implements IServlet {
 	
-	public DeleteServlet() {
+	public PutServlet() {
 		
 	}
 
