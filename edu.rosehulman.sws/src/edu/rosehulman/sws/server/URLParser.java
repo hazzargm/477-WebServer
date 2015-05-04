@@ -195,14 +195,7 @@ public class URLParser {
 	
 	// uri = /MyPlugin/MyServlet
 	public static String getServletDomain(String uri) {
-		StringTokenizer tokenizer = new StringTokenizer(uri, "/");
-		if(tokenizer.hasMoreTokens()) {
-			tokenizer.nextToken(); // Plugin Domain
-		}
-		if(tokenizer.hasMoreTokens()) {
-			return tokenizer.nextToken(); //Servlet Domain
-		}
-		return null;
+		return uri.substring(uri.indexOf("/", 1));
 	}
 	
 	public static boolean hasPostParameters(char[] postBody) {

@@ -42,6 +42,7 @@ import java.util.Map;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
 import edu.rosehulman.sws.protocol.IHttpRequest;
 import edu.rosehulman.sws.protocol.IHttpResponse;
+import edu.rosehulman.sws.server.Server;
 import edu.rosehulman.sws.server.URLParser;
 
 /**
@@ -82,6 +83,10 @@ public abstract class AbstractPlugin implements IPlugin {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		for (String s: this.servletMap.keySet()) {
+			System.out.println("KEY: " + s + " - " + servletMap.get(s).getClass().toString());
+		}
 	}
 	
 	private void parseRouteLine(String line) {
@@ -91,7 +96,6 @@ public abstract class AbstractPlugin implements IPlugin {
 		String routeKey = getServeltRouteKey(path, routeParts[1]);
 		String routeServletClass = routeParts[2];
 		
-		System.out.println("GET CLASS - " + getClass());
 		
 		// create new servlet instance frome routeServlet name
 		Class<?> servletClass;
@@ -127,7 +131,18 @@ public abstract class AbstractPlugin implements IPlugin {
 			s.process(request, new Response200OK());
 		} else {
 			System.out.println("SERVLET NOT FOUND!!! - "+ servletMapKey);
-			// TODO Return whatever error response for accesses a bad servlet (404 not found?)
+			System.out.println("LOOKING FOR static resource");
+			request.setUri(URLParser.getServletDomain(request.getUri()));
+			
+			URL url1 = getClass().getResource(IPlugin.ROUTE_FILE_NAME);
+			File file1 = new File(url1.toString());
+			System.out.println("FILE CEHCK ---- " + file1.exists() + " --- " + url1);
+			
+			URL url = getClass().getResource("web");
+	        System.out.println("URL - " + url.toString());
+			Server domainServer = new Server(url.toString());
+			request.setServer(domainServer);
+			request.handleRequest();
 		}
 	}
 

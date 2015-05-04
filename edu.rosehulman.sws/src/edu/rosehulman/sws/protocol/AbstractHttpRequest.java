@@ -50,7 +50,6 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	protected String version;
 	protected Map<String, String> header;
 	protected char[] body;
-	protected Map<String, String> bodyHeader;
 	
 	protected Server server;
 	protected OutputStream out;
@@ -80,6 +79,10 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	public String getUri() {
 		return uri;
 	}
+	
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
 
 	/**
 	 * The version of the http request.
@@ -100,6 +103,10 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	
 	public Server getServer() {
 		return this.server;
+	}
+	
+	public void setServer(Server server) {
+		this.server = server;
 	}
 	
 	public long getStart() {
@@ -144,6 +151,7 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 		
 		// Combine them together to form absolute file path
 		File file = new File(SpringUtilities.combine(rootDirectory, uri) + fileName);
+		System.out.println("FILE - " + SpringUtilities.combine(rootDirectory, uri) + fileName);
 		// Check if the file exists
 		if (file.exists()) {
 			System.out.println("FILE EXISTS");

@@ -4,9 +4,9 @@ package servlets;
 import edu.rosehulman.sws.extension.AbstractServlet;
 import edu.rosehulman.sws.extension.IServlet;
 
-public class HomeServlet extends AbstractServlet implements IServlet {
+public class FormServlet extends AbstractServlet implements IServlet {
 	
-	public HomeServlet() {
+	public FormServlet() {
 		
 	}
 

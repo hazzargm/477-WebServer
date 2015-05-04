@@ -1,1 +1,5 @@
-GET		/home		servlets.HomeServlet
+GET		/home						servlets.HomeServlet
+POST	/home						servlets.HomeServlet
+GET		/home/hello/duplicate		servlets.HomeServlet
+GET		/form						servlets.FormServlet
+POST	/form/result				servlets.FormResultServlet

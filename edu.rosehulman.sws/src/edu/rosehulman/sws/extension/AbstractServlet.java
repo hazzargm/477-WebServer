@@ -55,46 +55,4 @@ public abstract class AbstractServlet implements IServlet {
 	public IServlet getIServlet() {
 		return this;
 	}
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     */
-    protected void doGet(IHttpRequest request, IHttpResponse response) {
-        process(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     */
-    protected void doPost(IHttpRequest request, IHttpResponse response) {
-        process(request, response);
-    }
-    
-    /**
-     * Handles the HTTP <code>PUT</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     */
-    protected void doPut(IHttpRequest request, IHttpResponse response) {
-        process(request, response);
-    }
-    
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     */
-    protected void doDel(IHttpRequest request, IHttpResponse response) {
-        process(request, response);
-    }
-
 }

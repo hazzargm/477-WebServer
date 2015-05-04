@@ -72,6 +72,10 @@ public class Server implements Runnable {
 		}
 		
 	}
+	
+	public Server(String rootDirectory) {
+		this.rootDirectory = rootDirectory;
+	}
 
 	/**
 	 * Gets the root directory for this web server.

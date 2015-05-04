@@ -44,10 +44,12 @@ public interface IHttpRequest {
 	
 	public String getMethod();
 	public String getUri();
+	public void setUri(String uri);
 	public String getVersion();
 	public char[] getBody();
 	public Map<String, String> getHeader();	
 	public OutputStream getClientOutputStream();
 	public Server getServer();
+	public void setServer(Server server);
 	public long getStart();
 }
