@@ -72,10 +72,6 @@ public class Server implements Runnable {
 		}
 		
 	}
-	
-	public Server(String rootDirectory) {
-		this.rootDirectory = rootDirectory;
-	}
 
 	/**
 	 * Gets the root directory for this web server.
@@ -152,6 +148,7 @@ public class Server implements Runnable {
 				if(this.stop)
 					break;
 				
+				System.out.println("HERE!!!!!!!!!!!");
 				// Create a handler for this incoming connection and start the handler in a new thread
 				ConnectionHandler handler = new ConnectionHandler(this, connectionSocket);
 				new Thread(handler).start();

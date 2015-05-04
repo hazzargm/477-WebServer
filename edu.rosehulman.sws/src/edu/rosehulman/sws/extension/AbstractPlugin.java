@@ -132,16 +132,16 @@ public abstract class AbstractPlugin implements IPlugin {
 		} else {
 			System.out.println("SERVLET NOT FOUND!!! - "+ servletMapKey);
 			System.out.println("LOOKING FOR static resource");
-			request.setUri(URLParser.getServletDomain(request.getUri()));
-			
-			URL url1 = getClass().getResource(IPlugin.ROUTE_FILE_NAME);
-			File file1 = new File(url1.toString());
-			System.out.println("FILE CEHCK ---- " + file1.exists() + " --- " + url1);
-			
-			URL url = getClass().getResource("web");
-	        System.out.println("URL - " + url.toString());
-			Server domainServer = new Server(url.toString());
-			request.setServer(domainServer);
+//			request.setUri(URLParser.getServletDomain(request.getUri()));
+//			
+//			URL url1 = getClass().getResource(IPlugin.ROUTE_FILE_NAME);
+//			File file1 = new File(url1.toString());
+//			System.out.println("FILE CEHCK ---- " + file1.exists() + " --- " + url1);
+//			
+//			URL url = getClass().getResource("web");
+//	        System.out.println("URL - " + url.toString());
+//			Server domainServer = new Server(url.toString());
+//			request.setServer(domainServer);
 			request.handleRequest();
 		}
 	}

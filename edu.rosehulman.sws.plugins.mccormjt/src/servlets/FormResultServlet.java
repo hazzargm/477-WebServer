@@ -19,6 +19,7 @@ public class FormResultServlet extends AbstractServlet implements IServlet {
 		this.writer.write("<h1>Hello" + postParams.get("name") + ", because of your age...</h1>");
 		this.writer.write("<hr/>");
 		
+		System.out.println("AGE - " + postParams.get("age"));
 		int age = Integer.parseInt(postParams.get("age"));
 		String message;;
 		if (age > 70) {

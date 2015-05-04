@@ -28,6 +28,7 @@
 
 package edu.rosehulman.sws.server;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -96,6 +97,8 @@ public class ConnectionHandler implements Runnable {
 		// Now lets create a HttpRequest object
 		IHttpRequest request = null;
 		try {
+			System.out.println("STREAM" + inStream.toString());
+			if (inStream == null) return;
 			request = URLParser.parseIncomingRequest(inStream);
 			request.setCallback(server, outStream, start);
 			this.distributeRequest(request);
@@ -107,7 +110,7 @@ public class ConnectionHandler implements Runnable {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-		}
+		}		
 	}
 	
 	private void distributeRequest(IHttpRequest request) {
@@ -120,6 +123,12 @@ public class ConnectionHandler implements Runnable {
 		} else {
 			System.out.println("NO-PLUGIN FOUND");
 			request.handleRequest();
+		}
+		try {
+			this.socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
