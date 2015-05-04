@@ -49,7 +49,7 @@ import edu.rosehulman.sws.server.Server;
 public class DELRequest extends AbstractHttpRequest {
 
 	public DELRequest(String uri, String version, Map<String,String> header) {
-		this.method = Protocol.POST;
+		this.method = Protocol.DELETE;
 		this.uri = uri;
 		this.version = version;
 		this.header = header;

@@ -36,7 +36,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
@@ -124,7 +126,7 @@ public abstract class AbstractPlugin implements IPlugin {
 	public void route(IHttpRequest request, IHttpResponse response) {
 		String servletName = URLParser.getServletDomain(request.getUri());
 		String servletMapKey = getServeltRouteKey(request.getMethod(), servletName);
-		IServlet s = servletMap.get(servletMapKey);
+		IServlet s = findServlet(servletMapKey);
 
 		if(s != null) {
 			System.out.println("FOUND SERVLET = " + servletMapKey);
@@ -132,19 +134,21 @@ public abstract class AbstractPlugin implements IPlugin {
 		} else {
 			System.out.println("SERVLET NOT FOUND!!! - "+ servletMapKey);
 			System.out.println("LOOKING FOR static resource");
-//			request.setUri(URLParser.getServletDomain(request.getUri()));
-//			
-//			URL url1 = getClass().getResource(IPlugin.ROUTE_FILE_NAME);
-//			File file1 = new File(url1.toString());
-//			System.out.println("FILE CEHCK ---- " + file1.exists() + " --- " + url1);
-//			
-//			URL url = getClass().getResource("web");
-//	        System.out.println("URL - " + url.toString());
-//			Server domainServer = new Server(url.toString());
-//			request.setServer(domainServer);
 			request.handleRequest();
 		}
 	}
 
+	
+	private IServlet findServlet(String servletKey) {
+		List<String> keyParts = Arrays.asList(servletKey.split("/"));
+		IServlet servlet = null;
+		for (int i = keyParts.size(); i > 0; i--) {
+			String key = String.join("/", keyParts.subList(0, i));
+			System.out.println("KEY CHECK: " + key);
+			servlet = this.servletMap.get(key);
+			if (servlet != null) break;
+		}
+		return servlet;
+	}
 
 }
