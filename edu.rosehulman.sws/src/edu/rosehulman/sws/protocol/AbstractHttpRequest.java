@@ -70,16 +70,7 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	public String getMethod() {
 		return method;
 	}
-	
-	/**
-	 * The request method.
-	 * 
-	 * @return the method
-	 */
-	public IHttpResponse getResponse() {
-		return response;
-	}
-	
+
 	/**
 	 * The URI of the request object.
 	 * 

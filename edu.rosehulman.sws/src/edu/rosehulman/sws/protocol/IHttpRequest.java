@@ -52,5 +52,4 @@ public interface IHttpRequest {
 	public Server getServer();
 	public void setServer(Server server);
 	public long getStart();
-	public abstract IHttpResponse getResponse();
 }

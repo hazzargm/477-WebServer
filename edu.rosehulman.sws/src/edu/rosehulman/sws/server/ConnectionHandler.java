@@ -48,12 +48,10 @@ import edu.rosehulman.sws.protocol.ProtocolException;
 public class ConnectionHandler implements Runnable {
 	private Server server;
 	private Socket socket;
-	private ServerCache serverCahce;
 
 	public ConnectionHandler(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
-		this.serverCahce = server.getCache();
 	}
 
 	/**
@@ -70,6 +68,7 @@ public class ConnectionHandler implements Runnable {
 	 */
 	@Override
 	public void run() {
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!TALK TO CHANDAN");
 		// Get the start time
 		long start = System.currentTimeMillis();
 
@@ -102,18 +101,7 @@ public class ConnectionHandler implements Runnable {
 			if (inStream == null) return;
 			request = URLParser.parseIncomingRequest(inStream);
 			request.setCallback(server, outStream, start);
-			
-			// check if request is cached
-			IHttpResponse cachedResponse = serverCahce.getCachedResponse(request.getMethod(), request.getUri());
-			if (cachedResponse != null) {
-				System.out.println("@@@@@@Responding with Cahced Response@@@@@@@");
-				cachedResponse.write(outStream);
-			} 
-			// otherwise handle request as normal
-			else {
-				this.distributeRequest(request);
-			}
-			
+			this.distributeRequest(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 			IHttpResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHttpResponse.createTempResponseFile());
@@ -136,10 +124,6 @@ public class ConnectionHandler implements Runnable {
 			System.out.println("NO-PLUGIN FOUND");
 			request.handleRequest();
 		}
-		
-		// cache response
-//		this.serverCahce.cacheResponse(request.getMethod(), request.getUri(), request.getResponse());
-		
 		try {
 			this.socket.close();
 		} catch (IOException e) {

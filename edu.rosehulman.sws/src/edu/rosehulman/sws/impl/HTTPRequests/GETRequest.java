@@ -45,8 +45,6 @@ import edu.rosehulman.sws.server.Server;
  */
 public class GETRequest extends AbstractHttpRequest {
 	
-	public static long DEFAULT_EXPIRATION_AGE = 10000;
-	
 	public GETRequest(String uri, String version, Map<String,String> header) {
 		this.method = Protocol.GET;
 		this.uri = uri;
@@ -68,9 +66,7 @@ public class GETRequest extends AbstractHttpRequest {
 			ReadAction readAction = new ReadAction(response, file);
 			response = readAction.performAction();
 		}
-		
-		response.setExpiresAt(Server.getCurrentTime() + DEFAULT_EXPIRATION_AGE);
-		
+
 		try {
 			response.write(out);
 			// Increment number of connections by 1
