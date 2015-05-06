@@ -49,6 +49,7 @@ public abstract class AbstractHttpResponse implements IHttpResponse {
 	protected String phrase;
 	protected Map<String, String> header;
 	protected File file;
+	protected long expiresAt = -1;
 	
 	public static File createTempResponseFile() {
 		File tempFile = null;
@@ -59,6 +60,22 @@ public abstract class AbstractHttpResponse implements IHttpResponse {
 			e.printStackTrace();
 		}
 		return tempFile;
+	}
+	
+	/**
+	 * Set time response becomes stale and expires
+	 * 
+	 */
+	public void setExpiresAt(long time) {
+		this.expiresAt = time;
+	}
+	
+	/**
+	 * Get the time response becomes stale and expires
+	 * 
+	 */
+	public long getExpiresAt() {
+		return expiresAt;
 	}
 	
 	/**

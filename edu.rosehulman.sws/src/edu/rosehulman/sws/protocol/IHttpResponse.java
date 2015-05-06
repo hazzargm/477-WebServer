@@ -49,4 +49,6 @@ public interface IHttpResponse {
 	public Map<String, String> getHeader();
 	public boolean isError();
 	public void setFile(File createTempFile);
+	public long getExpiresAt();
+	public void setExpiresAt(long time);
 }

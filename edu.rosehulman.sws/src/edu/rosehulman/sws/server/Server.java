@@ -49,8 +49,9 @@ public class Server implements Runnable {
 	
 	private long connections;
 	private long serviceTime;
-	
+	private ServerCache cache;
 	private WebServer window;
+	
 	/**
 	 * @param rootDirectory
 	 * @param port
@@ -62,6 +63,7 @@ public class Server implements Runnable {
 		this.connections = 0;
 		this.serviceTime = 0;
 		this.window = window;
+		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
 		File pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
 		System.out.println(pluginDir);
@@ -71,6 +73,11 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	// Get the current server epoch time
+	public static long getCurrentTime() {
+		return System.currentTimeMillis();
 	}
 
 	/**
@@ -207,5 +214,12 @@ public class Server implements Runnable {
 			return plugins.get(pluginDomain);
 		}
 		return null;
+	}
+
+	/**
+	 * @return the cache
+	 */
+	public ServerCache getCache() {
+		return cache;
 	}
 }
