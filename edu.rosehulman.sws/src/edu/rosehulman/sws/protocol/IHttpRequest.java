@@ -40,7 +40,7 @@ import edu.rosehulman.sws.server.Server;
 public interface IHttpRequest {	
 	public abstract void handleRequest();
 	public File lookup(boolean ensureFileCreation, String filename);
-	public void setCallback(Server server, OutputStream outStream, long start);
+	public void setCallback(Server server, OutputStream outStream);
 	
 	public String getMethod();
 	public String getUri();
@@ -51,6 +51,5 @@ public interface IHttpRequest {
 	public OutputStream getClientOutputStream();
 	public Server getServer();
 	public void setServer(Server server);
-	public long getStart();
 	public abstract IHttpResponse getResponse();
 }

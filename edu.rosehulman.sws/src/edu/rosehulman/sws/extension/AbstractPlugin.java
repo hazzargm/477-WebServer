@@ -81,7 +81,7 @@ public abstract class AbstractPlugin implements IPlugin {
 			String line = null;
 			while ((line = br.readLine()) != null)  
 			{  
-				System.out.println("ROUTE LOADED: " + line);
+				//System.out.println("ROUTE LOADED: " + line);
 				parseRouteLine(line);
 			}
 		} catch (IOException e) {
@@ -89,7 +89,7 @@ public abstract class AbstractPlugin implements IPlugin {
 		}
 		
 		for (String s: this.servletMap.keySet()) {
-			System.out.println("KEY: " + s + " - " + servletMap.get(s).getClass().toString());
+			//System.out.println("KEY: " + s + " - " + servletMap.get(s).getClass().toString());
 		}
 	}
 	
@@ -131,11 +131,11 @@ public abstract class AbstractPlugin implements IPlugin {
 		IServlet s = findServlet(servletMapKey);
 
 		if(s != null) {
-			System.out.println("FOUND SERVLET = " + servletMapKey);
+			//System.out.println("FOUND SERVLET = " + servletMapKey);
 			s.process(request, new Response200OK());
 		} else {
-			System.out.println("SERVLET NOT FOUND!!! - "+ servletMapKey);
-			System.out.println("LOOKING FOR static resource");
+			//System.out.println("SERVLET NOT FOUND!!! - "+ servletMapKey);
+			//System.out.println("LOOKING FOR static resource");
 			request.handleRequest();
 		}
 	}
@@ -146,7 +146,7 @@ public abstract class AbstractPlugin implements IPlugin {
 		IServlet servlet = null;
 		for (int i = keyParts.size(); i > 0; i--) {
 			String key = StringUtils.join(keyParts.subList(0, i), "/");
-			System.out.println("KEY CHECK: " + key);
+			//System.out.println("KEY CHECK: " + key);
 			servlet = this.servletMap.get(key);
 			if (servlet != null) break;
 		}

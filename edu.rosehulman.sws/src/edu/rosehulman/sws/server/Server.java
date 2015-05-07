@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +53,10 @@ public class Server implements Runnable {
 	private ServerCache cache;
 	private WebServer window;
 	
+	private Map<InetAddress, ConnectionHandler> connectionMap;
+	
+	private ArrayList<Exception> exceptions; //TODO
+	
 	/**
 	 * @param rootDirectory
 	 * @param port
@@ -65,8 +70,9 @@ public class Server implements Runnable {
 		this.window = window;
 		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
+		this.connectionMap = new HashMap<InetAddress, ConnectionHandler>();
+		this.exceptions = new ArrayList<Exception>();
 		File pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
-		System.out.println(pluginDir);
 		try {
 			loader = new PluginLoader(this, pluginDir);
 		} catch (IOException e) {
@@ -150,15 +156,20 @@ public class Server implements Runnable {
 				// Listen for incoming socket connection
 				// This method block until somebody makes a request
 				Socket connectionSocket = this.welcomeSocket.accept();
-				
 				// Come out of the loop if the stop flag is set
 				if(this.stop)
 					break;
 				
-				System.out.println("HERE!!!!!!!!!!!");
-				// Create a handler for this incoming connection and start the handler in a new thread
-				ConnectionHandler handler = new ConnectionHandler(this, connectionSocket);
-				new Thread(handler).start();
+//				if(connectionMap.containsKey(connectionSocket.getInetAddress())) {
+//					new Thread(connectionMap.get(connectionSocket.getInetAddress())).start();
+//				} else {
+					// Create a handler for this incoming connection and start the handler in a new thread
+					ConnectionHandler handler = new ConnectionHandler(this, connectionSocket);
+//					connectionMap.put(connectionSocket.getInetAddress(), handler);
+//					System.out.println(connectionSocket.getInetAddress() + "---------" + handler);
+//					System.out.println("Creating Connection Handler");
+					new Thread(handler).start();
+//				}
 			}
 			this.welcomeSocket.close();
 		}
@@ -173,7 +184,7 @@ public class Server implements Runnable {
 	public synchronized void stop() {
 		if(this.stop)
 			return;
-		
+		printExceptions();
 		// Set the stop flag to be true
 		this.stop = true;
 		try {
@@ -221,5 +232,19 @@ public class Server implements Runnable {
 	 */
 	public ServerCache getCache() {
 		return cache;
+	}
+	
+	public void logException(Exception e) {
+		exceptions.add(e);
+	}
+	
+	public void printExceptions() {
+		System.out.println("------------Exception Log------------");
+		for(int i = 0; i < exceptions.size(); i++) {
+			Exception e = exceptions.get(i);
+			System.out.println(i + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		System.out.println("-------------------------------------");
 	}
 }

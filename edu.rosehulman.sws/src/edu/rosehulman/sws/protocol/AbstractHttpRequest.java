@@ -53,7 +53,6 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	
 	protected Server server;
 	protected OutputStream out;
-	protected long start;
 
 	protected IHttpResponse response;
 
@@ -116,10 +115,6 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	
 	public void setServer(Server server) {
 		this.server = server;
-	}
-	
-	public long getStart() {
-		return this.start;
 	}
 	
 	/**
@@ -195,10 +190,9 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 	 * @see edu.rosehulman.sws.protocol.IHTTPRequest#setCallback(edu.rosehulman.sws.server.Server, java.io.OutputStream, long)
 	 */
 	@Override
-	public void setCallback(Server server, OutputStream outStream, long start) {
+	public void setCallback(Server server, OutputStream outStream) {
 		this.server = server;
 		this.out = outStream;
-		this.start = start;
 	}
 	
 	

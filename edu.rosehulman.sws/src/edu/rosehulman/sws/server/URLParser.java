@@ -62,33 +62,6 @@ public class URLParser {
 	private static Map<String, String> header;
 	private static char[] body;
 	//private static Map<String, String> bodyHeader;
-	
-	@SuppressWarnings({ "resource", "deprecation" })
-	public static Object extractClassFromJar(File file, String classNameAttrKey, String classGetterMethod) {
-		Object classObj = null;
-		
-		try {			
-			URL[] classLoaderURLs = {file.toURL()};
-			URLClassLoader classLoader = new URLClassLoader(classLoaderURLs);
-			Manifest m = new JarFile(file.toString()).getManifest();
-			Attributes attr = m.getMainAttributes();
-			String className = attr.getValue(classNameAttrKey);
-			Class<?> pluginClass = classLoader.loadClass(className);
-			// Create a new instance from the loaded class
-			Constructor<?> constructor = pluginClass.getConstructor();
-			Object pluginObj = constructor.newInstance();
-			
-			// Getting a method from the loaded class and invoke it
-			Method method = pluginClass.getMethod(classGetterMethod);
-			classObj = method.invoke(pluginObj);
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-			// Do Nothing! :)
-		}
-		
-		return classObj;
-	}
 
 	public static IHttpRequest parseIncomingRequest(InputStream inputStream)
 			throws Exception {
@@ -103,9 +76,11 @@ public class URLParser {
 											// \n, or both
 
 		if (line == null) {
+
 			throw new ProtocolException(Protocol.BAD_REQUEST_CODE,
 					Protocol.BAD_REQUEST_TEXT); // TODO: determine what kind of
 												// error response to throw
+
 		}
 
 		// We will break this line using space as delimeter into three parts
@@ -150,6 +125,7 @@ public class URLParser {
 				// Lets strip white spaces if any from value as well
 				value = value.trim();
 				// Now lets put the key=>value mapping to the header map
+				System.out.println("Key{" + key + "} value{" + value + "}");
 				header.put(key, value);
 			}
 			// Processed one more line, now lets read another header line and
@@ -197,6 +173,33 @@ public class URLParser {
 	// uri = /MyPlugin/MyServlet
 	public static String getServletDomain(String uri) {
 		return uri.substring(uri.indexOf("/", 1));
+	}
+	
+	@SuppressWarnings({ "resource", "deprecation" })
+	public static Object extractClassFromJar(File file, String classNameAttrKey, String classGetterMethod) {
+		Object classObj = null;
+		
+		try {			
+			URL[] classLoaderURLs = {file.toURL()};
+			URLClassLoader classLoader = new URLClassLoader(classLoaderURLs);
+			Manifest m = new JarFile(file.toString()).getManifest();
+			Attributes attr = m.getMainAttributes();
+			String className = attr.getValue(classNameAttrKey);
+			Class<?> pluginClass = classLoader.loadClass(className);
+			// Create a new instance from the loaded class
+			Constructor<?> constructor = pluginClass.getConstructor();
+			Object pluginObj = constructor.newInstance();
+			
+			// Getting a method from the loaded class and invoke it
+			Method method = pluginClass.getMethod(classGetterMethod);
+			classObj = method.invoke(pluginObj);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			// Do Nothing! :)
+		}
+		
+		return classObj;
 	}
 	
 	public static boolean hasPostParameters(char[] postBody) {

@@ -76,12 +76,8 @@ public class PUTRequest extends AbstractHttpRequest {
 		}
 
 		try {
+			System.out.println(response);
 			response.write(out);
-			// Increment number of connections by 1
-			server.incrementConnections(1);
-			// Get the end time
-			long end = System.currentTimeMillis();
-			server.incrementServiceTime(end - start);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

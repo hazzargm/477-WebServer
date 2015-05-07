@@ -31,7 +31,9 @@ package edu.rosehulman.sws.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 import edu.rosehulman.sws.extension.IPlugin;
 import edu.rosehulman.sws.impl.Protocol;
@@ -50,9 +52,28 @@ public class ConnectionHandler implements Runnable {
 	private Socket socket;
 	private ServerCache serverCahce;
 
+	/*
+	private InputStream inStream;
+	private OutputStream outStream;
+	private InetAddress addr;
+	private int port;
+	private boolean keep_alive = true;
+	*/
+	
 	public ConnectionHandler(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
+//		try {
+//			this.addr = socket.getInetAddress();
+//			this.port = socket.getPort();
+//			this.inStream = this.socket.getInputStream(); // for incoming requests
+//			this.outStream = this.socket.getOutputStream(); // for outgoing responses
+//			this.socket.setSoTimeout(30000);
+//			this.socket.setKeepAlive(true);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		this.serverCahce = server.getCache();
 	}
 
@@ -70,59 +91,75 @@ public class ConnectionHandler implements Runnable {
 	 */
 	@Override
 	public void run() {
-		// Get the start time
-		long start = System.currentTimeMillis();
-
+		
+//		if(this.socket.isClosed()){
+//			try {
+//				this.socket = new Socket(this.addr, this.port);
+//				this.inStream = this.socket.getInputStream();
+//				this.outStream = this.socket.getOutputStream();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		InputStream inStream = null;
 		OutputStream outStream = null;
-
 		try {
 			inStream = this.socket.getInputStream(); // for incoming requests
 			outStream = this.socket.getOutputStream(); // for outgoing responses
 			
 		} catch (Exception e) {
-			// Cannot do anything if we have exception reading input or output
-			// stream
-			// May be have text to log this for further analysis?
 			e.printStackTrace();
-
-			// Increment number of connections by 1
-			server.incrementConnections(1);
-			// Get the end time
-			long end = System.currentTimeMillis();
-			this.server.incrementServiceTime(end - start);
-			return;
 		}
-
+		
 		// At this point we have the input and output stream of the socket
 		// Now lets create a HttpRequest object
 		IHttpRequest request = null;
-		try {
-			System.out.println("STREAM" + inStream.toString());
-			if (inStream == null) return;
-			request = URLParser.parseIncomingRequest(inStream);
-			request.setCallback(server, outStream, start);
-			
-			// check if request is cached
-			IHttpResponse cachedResponse = serverCahce.getCachedResponse(request.getMethod(), request.getUri());
-			if (cachedResponse != null) {
-				System.out.println("@@@@@@Responding with Cahced Response@@@@@@@");
-				cachedResponse.write(outStream);
-			} 
-			// otherwise handle request as normal
-			else {
-				this.distributeRequest(request);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			IHttpResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHttpResponse.createTempResponseFile());
+	//	while(keep_alive) {
+			long start = System.currentTimeMillis();
 			try {
-				errorResponse.write(outStream);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}		
+				System.out.println("STREAM" + inStream.toString());
+				if (inStream == null)
+					return;
+				try {
+					request = URLParser.parseIncomingRequest(inStream);
+					request.setCallback(server, outStream);
+				} catch (Exception e) {
+					e.printStackTrace(); //TODO
+	//				System.out.println("EXCEPTION");
+	//				server.logException(e);
+				}
+				
+				// check if request is cached
+				IHttpResponse cachedResponse = serverCahce.getCachedResponse(request.getMethod(), request.getUri());
+				if (cachedResponse != null) {
+					System.out.println("Responding with Cached Response");
+					cachedResponse.write(outStream);
+				} 
+				// otherwise handle request as normal
+				else {
+					this.distributeRequest(request);
+					// Increment number of connections by 1
+					server.incrementConnections(1);
+					// Get the end time
+					long end = System.currentTimeMillis();
+					this.server.incrementServiceTime(end - start);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				IHttpResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHttpResponse.createTempResponseFile());
+				try {
+					errorResponse.write(outStream);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}	
+//			boolean keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals("keep-alive");
+//			if(keep_alive) {
+//				this.run();
+//			}
+	//	}
 	}
 	
 	private void distributeRequest(IHttpRequest request) {
@@ -137,14 +174,18 @@ public class ConnectionHandler implements Runnable {
 			request.handleRequest();
 		}
 		
+//		boolean keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals("keep-alive");
+//		System.out.println(keep_alive);
 		// cache response
 //		this.serverCahce.cacheResponse(request.getMethod(), request.getUri(), request.getResponse());
-		
-		try {
-			this.socket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		if(!keep_alive) {
+			try {
+				System.out.println("Closing socket");
+				this.socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//		}
 	}
 }
