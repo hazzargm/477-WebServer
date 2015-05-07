@@ -77,11 +77,11 @@ public class HttpClient extends javax.swing.JFrame {
 
         lblServer.setText("Server Name");
 
-        txtServer.setText("everest.csse.rose-hulman.edu");
+        txtServer.setText("localhost");
 
         lblPort.setText("Port Number");
 
-        txtPort.setText("80");
+        txtPort.setText("8080");
 
         jLabel1.setText("Sleep Time (ms)");
 
@@ -487,7 +487,7 @@ public class HttpClient extends javax.swing.JFrame {
             	});
                 return;
             }
-            
+            System.out.println("Here1");
             txtResponse.append("Socket Disconnected!\n");
             JOptionPane.showMessageDialog(HttpClient.this, "Socket Disconnected!", "Connection Problem", JOptionPane.ERROR_MESSAGE);
         }

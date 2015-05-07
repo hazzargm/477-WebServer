@@ -53,10 +53,20 @@ public class ConnectionHandler implements Runnable {
 	private ServerCache serverCahce;
 	private boolean keep_alive = true;
 	
+	private int reqsReceived;
+	private int reqsServed;
+	private long totalServiceTime;
+	private double avgRespTime;
+	
 	public ConnectionHandler(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
 		this.serverCahce = server.getCache();
+		
+		reqsReceived = 0;
+		reqsServed = 0;
+		totalServiceTime = 0;
+		avgRespTime = 0;
 	}
 
 	/**
@@ -95,6 +105,7 @@ public class ConnectionHandler implements Runnable {
 				try {
 					request = URLParser.parseIncomingRequest(inStream);
 					request.setCallback(server, outStream);
+					reqsReceived++;
 					keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals("keep-alive");
 					System.out.println("Pre-Response: Keep-Alive = " + keep_alive);
 				} catch (Exception e) {
@@ -111,13 +122,13 @@ public class ConnectionHandler implements Runnable {
 //				else {
 					System.out.println(request.toString());
 					this.distributeRequest(request);
+					reqsServed++;
 					System.out.println("Request Sent!");
 					// Increment number of connections by 1
-					server.incrementConnections(1);
 					// Get the end time
 					long end = System.currentTimeMillis();
-					this.server.incrementServiceTime(end - start);
-					
+					totalServiceTime = totalServiceTime + (end - start);
+					avgRespTime = (double) reqsServed / (double) totalServiceTime;					
 //				}
 				
 			} catch (Exception e) {
@@ -153,10 +164,19 @@ public class ConnectionHandler implements Runnable {
 			try {
 				System.out.println("Server is closing socket");
 				this.socket.close();
+				server.incrementConnections(1);
+				server.incrementServiceTime(totalServiceTime);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void printStatistics() {
+		System.out.println("Requests Received: " + reqsReceived);
+		System.out.println("Requests Served: " + reqsServed);
+		System.out.println("Total Service Time: " + totalServiceTime);
+		System.out.println("Avg. Response Time: " + avgRespTime);
 	}
 }
