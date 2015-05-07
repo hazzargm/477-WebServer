@@ -10,7 +10,6 @@ import edu.rosehulman.sws.server.URLParser;
 public class FormResultServlet extends AbstractServlet implements IServlet {
 	
 	public FormResultServlet() {
-		
 	}
 
 	public void serve() {
