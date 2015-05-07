@@ -483,13 +483,16 @@ public class HttpClient extends javax.swing.JFrame {
 					public void run() {
 		                txtResponse.append(e.toString() + "\n");
 		                JOptionPane.showMessageDialog(HttpClient.this, e.getMessage() + " Connetion Closed", "Connection Problem", JOptionPane.ERROR_MESSAGE);
+		                e.printStackTrace();
 					}
             	});
                 return;
             }
-            System.out.println("Here1");
-            txtResponse.append("Socket Disconnected!\n");
-            JOptionPane.showMessageDialog(HttpClient.this, "Socket Disconnected!", "Connection Problem", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Socket is actually closed: " + socket.isClosed());
+            if(socket.isClosed()) {
+            	txtResponse.append("Socket Disconnected!\n");
+            	JOptionPane.showMessageDialog(HttpClient.this, "Socket Disconnected!", "Connection Problem", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
     

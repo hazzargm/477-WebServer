@@ -102,12 +102,13 @@ public class Response200OK extends AbstractHttpResponse {
 			// While there is some bytes to read from file, read each chunk and send to the socket out stream
 			while((bytesRead = inStream.read(buffer)) != -1) { 
 				out.write(buffer, 0, bytesRead);//TODO
+				System.out.println(new String(buffer));
 			}
 			// Close the file input stream, we are done reading
 			inStream.close();
 				
 			// Flush the data so that outStream sends everything through the socket 
-			//out.flush();
+			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

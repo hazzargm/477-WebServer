@@ -110,6 +110,7 @@ public class ConnectionHandler implements Runnable {
 					System.out.println("Pre-Response: Keep-Alive = " + keep_alive);
 				} catch (Exception e) {
 					e.printStackTrace(); //TODO
+					break;
 				}
 				
 //				// check if request is cached
@@ -123,7 +124,7 @@ public class ConnectionHandler implements Runnable {
 					System.out.println(request.toString());
 					this.distributeRequest(request);
 					reqsServed++;
-					System.out.println("Request Sent!");
+					System.out.println("Response Sent!");
 					// Increment number of connections by 1
 					// Get the end time
 					long end = System.currentTimeMillis();
@@ -146,7 +147,6 @@ public class ConnectionHandler implements Runnable {
 	}
 	
 	private void distributeRequest(IHttpRequest request) {
-		System.out.println(request);
 		String pluginDomain = URLParser.getPluginDomain(request.getUri());
 		IPlugin p = server.getPlugin(pluginDomain);
 		if(p != null) {

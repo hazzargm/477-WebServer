@@ -72,6 +72,7 @@ public class GETRequest extends AbstractHttpRequest {
 		response.setExpiresAt(Server.getCurrentTime() + DEFAULT_EXPIRATION_AGE);
 		
 		try {
+			System.out.println("Printing response...");
 			System.out.println(response);
 			response.write(out);
 		} catch (Exception e) {

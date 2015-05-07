@@ -139,12 +139,19 @@ public class HttpResponse {
 		int contentLength = 0;
 		try {
 			contentLength = Integer.parseInt(response.header.get("content-length"));
+			System.out.println("Conetent Length: " + contentLength);
 		}
 		catch(Exception e){}
 		
+		int bytesRead = 0;
+		int cap = 5;
 		if(contentLength > 0) {
-			response.body = new char[contentLength];
-			reader.read(response.body);
+			response.body = new char[contentLength + 4095];
+			int read = 0;
+			while((read = reader.read(response.body, bytesRead, cap)) != -1) {
+				bytesRead += read;
+			}
+			System.out.println(new String(response.body));
 		}
 		
 		return response;
