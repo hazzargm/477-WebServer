@@ -65,6 +65,7 @@ public class Response500InternalServiceError extends AbstractHttpResponse {
 	 */
 	@Override
 	public void write(OutputStream outStream) {
+		System.out.println(this.toString());
 		if(file == null) {
 			file = AbstractHttpResponse.createTempResponseFile();
 		}

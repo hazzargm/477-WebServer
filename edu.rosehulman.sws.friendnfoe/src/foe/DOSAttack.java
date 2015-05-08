@@ -21,6 +21,9 @@
 
 package foe;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,6 +40,7 @@ public abstract class DOSAttack implements Runnable {
 	protected String[] uris;
 	protected int threadPool;
 	protected int taskPerSecond;
+	protected Socket socket;
 	
 	private ArrayList<DOSListener> listeners;
 	private boolean stop;
@@ -44,6 +48,14 @@ public abstract class DOSAttack implements Runnable {
 	public DOSAttack(String host, int port, String[] uris, int threadPool, int taskPerSecond) {
 		this.host = host;
 		this.port = port;
+		
+		//REMOVE THIS CODE AND COMMENT BACK IN BruteForceAttackCode for multiple connections
+		try {
+			this.socket = new Socket(host, port);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.uris = uris;
 		this.threadPool = threadPool;
 		this.taskPerSecond = taskPerSecond;

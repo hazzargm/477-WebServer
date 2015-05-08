@@ -76,7 +76,6 @@ public class URLParser {
 											// \n, or both
 
 		if (line == null) {
-			System.out.println("EXCEPTION!!!!!!!!");
 			throw new ProtocolException(Protocol.BAD_REQUEST_CODE,
 					Protocol.BAD_REQUEST_TEXT); // TODO: determine what kind of
 												// error response to throw
@@ -125,8 +124,8 @@ public class URLParser {
 				// Lets strip white spaces if any from value as well
 				value = value.trim();
 				// Now lets put the key=>value mapping to the header map
-				System.out.println("Printing actual request header:");
-				System.out.println("Key{" + key + "} value{" + value + "}");
+//				System.out.println("Printing actual request header:");
+//				System.out.println("Key{" + key + "} value{" + value + "}");
 				header.put(key, value);
 			}
 			// Processed one more line, now lets read another header line and

@@ -75,7 +75,7 @@ public class WriteAction extends AbstractRequestAction {
 			fw.close();
 
 			// Lets fill up header fields with more information
-			response.fillGeneralHeader(Protocol.CLOSE);
+			response.fillGeneralHeader();
 			// Lets add last modified date for the file
 			long timeSinceEpoch = file.lastModified();
 			Date modifiedTime = new Date(timeSinceEpoch);

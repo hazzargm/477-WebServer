@@ -69,6 +69,7 @@ public class DELRequest extends AbstractHttpRequest {
 		System.out.println("LOOKUP END");
 		
 		if (!response.isError()) {
+			response.setConnection(header.get(Protocol.CONNECTION));
 			this.response.setFile(AbstractHttpResponse.createTempResponseFile());
 			// pass in true so that file is appended to
 			DeleteAction deleteAction = new DeleteAction(response, file);

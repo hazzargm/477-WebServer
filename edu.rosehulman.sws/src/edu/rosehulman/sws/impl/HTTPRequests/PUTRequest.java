@@ -69,6 +69,7 @@ public class PUTRequest extends AbstractHttpRequest {
 		File file = lookup(false, null);
 		
 		if (!response.isError()) {
+			response.setConnection(header.get(Protocol.CONNECTION));
 			this.response.setFile(AbstractHttpResponse.createTempResponseFile());
 			// pass in true so that file is appended to
 			WriteAction writeAction = new WriteAction(response, server, file, this.body, true);

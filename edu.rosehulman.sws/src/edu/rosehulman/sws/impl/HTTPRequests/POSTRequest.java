@@ -67,6 +67,7 @@ public class POSTRequest extends AbstractHttpRequest {
 		File file = lookup(true, null);
 		
 		if (!response.isError()) {
+			response.setConnection(header.get(Protocol.CONNECTION));
 			this.response.setFile(AbstractHttpResponse.createTempResponseFile());
 			// pass in false so that file is overwritten
 			WriteAction writeAction = new WriteAction(response, server, file, this.body, false);

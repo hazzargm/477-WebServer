@@ -28,6 +28,7 @@
  
 package edu.rosehulman.sws.impl.RequestActions;
 
+import java.awt.SystemColor;
 import java.io.File;
 
 import edu.rosehulman.sws.protocol.AbstractHttpResponse;
@@ -50,6 +51,7 @@ public class DeleteAction extends AbstractRequestAction {
 	@Override
 	public IHttpResponse performAction() {
 		this.file.delete();
+		System.out.println(this.response.toString());
 		//TODO: Update the response....
 		return response;
 	}

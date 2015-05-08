@@ -65,6 +65,15 @@ public class Response404NotFound extends AbstractHttpResponse {
 	 */
 	@Override
 	public void write(OutputStream outStream) {
+		/* This is for testing Brute Force attacks
+		try {
+			throw new Exception("THERE IS A 404 NOT FOUND!!!!!!!!!");
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
+		System.out.println(this.toString());
 		if(file == null) {
 			file = AbstractHttpResponse.createTempResponseFile();
 		}

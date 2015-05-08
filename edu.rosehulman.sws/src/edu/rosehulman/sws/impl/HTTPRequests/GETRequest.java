@@ -65,15 +65,12 @@ public class GETRequest extends AbstractHttpRequest {
 		File file = lookup(false, null);
 		
 		if (!response.isError()) {
+			response.setConnection(header.get(Protocol.CONNECTION));
 			ReadAction readAction = new ReadAction(response, file);
 			response = readAction.performAction();
-		}
-		
-		response.setExpiresAt(Server.getCurrentTime() + DEFAULT_EXPIRATION_AGE);
-		
+			response.setExpiresAt(Server.getCurrentTime() + DEFAULT_EXPIRATION_AGE);
+		}		
 		try {
-			System.out.println("Printing response...");
-			System.out.println(response);
 			response.write(out);
 		} catch (Exception e) {
 			e.printStackTrace();

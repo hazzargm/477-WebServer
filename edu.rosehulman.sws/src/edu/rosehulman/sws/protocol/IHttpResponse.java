@@ -40,7 +40,7 @@ public interface IHttpResponse {
 
 	public void write(OutputStream outStream) throws Exception;
 	public void put(String key, String value);
-	public void fillGeneralHeader(String close);
+	public void fillGeneralHeader();
 	
 	public String getVersion();
 	public int getCode();
@@ -51,4 +51,5 @@ public interface IHttpResponse {
 	public void setFile(File createTempFile);
 	public long getExpiresAt();
 	public void setExpiresAt(long time);
+	public void setConnection(String connection);
 }

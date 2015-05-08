@@ -55,6 +55,7 @@ public class ConnectionHandler implements Runnable {
 	
 	private int reqsReceived;
 	private int reqsServed;
+	private long lastServiceTime;
 	private long totalServiceTime;
 	private double avgRespTime;
 	
@@ -65,6 +66,7 @@ public class ConnectionHandler implements Runnable {
 		
 		reqsReceived = 0;
 		reqsServed = 0;
+		lastServiceTime = 0;
 		totalServiceTime = 0;
 		avgRespTime = 0;
 	}
@@ -97,6 +99,16 @@ public class ConnectionHandler implements Runnable {
 		// Now lets create a HttpRequest object
 		IHttpRequest request = null;
 		while(keep_alive) {
+			/* This code was used to test if a "keep-alive" connection gets closed or not
+			if(reqsServed > 0) {
+				System.out.println("Waiting for connection to close...");
+				while(true) {
+					if(socket.isClosed()) {
+						System.out.println("Connection Closed!!!!");
+					}
+				}
+			}
+			*/
 			keep_alive = false;
 			long start = System.currentTimeMillis();
 			try {
@@ -109,7 +121,7 @@ public class ConnectionHandler implements Runnable {
 					keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals("keep-alive");
 					System.out.println("Pre-Response: Keep-Alive = " + keep_alive);
 				} catch (Exception e) {
-					e.printStackTrace(); //TODO
+					e.printStackTrace(); //TODO this is a socket exception when the client unexpectedly closes a keep-alive connection
 					break;
 				}
 				
@@ -128,8 +140,9 @@ public class ConnectionHandler implements Runnable {
 					// Increment number of connections by 1
 					// Get the end time
 					long end = System.currentTimeMillis();
-					totalServiceTime = totalServiceTime + (end - start);
-					avgRespTime = (double) reqsServed / (double) totalServiceTime;					
+					lastServiceTime = end - start;
+					totalServiceTime += lastServiceTime;
+					avgRespTime = (double) totalServiceTime / (double) reqsServed;					
 //				}
 				
 			} catch (Exception e) {
@@ -141,8 +154,10 @@ public class ConnectionHandler implements Runnable {
 					e1.printStackTrace();
 				}
 			}
-			keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals("keep-alive");
+			keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals(Protocol.OPEN.toLowerCase());
+			System.out.println(request.getHeader().get(Protocol.CONNECTION.toLowerCase()));
 			System.out.println("Restarting loop: Keep-Alive: " + keep_alive);
+			this.printStatistics();
 		}
 	}
 	
@@ -174,9 +189,12 @@ public class ConnectionHandler implements Runnable {
 	}
 	
 	private void printStatistics() {
+		System.out.println("Statistics-------------------------------");
 		System.out.println("Requests Received: " + reqsReceived);
 		System.out.println("Requests Served: " + reqsServed);
-		System.out.println("Total Service Time: " + totalServiceTime);
-		System.out.println("Avg. Response Time: " + avgRespTime);
+		System.out.println("Total Service Time: " + totalServiceTime + " ms");
+		System.out.println("Last Service Time: " + lastServiceTime + " ms");
+		System.out.println("Avg. Response Time: " + avgRespTime + " ms/req");
+		System.out.println("-----------------------------------------");
 	}
 }

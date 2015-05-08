@@ -49,6 +49,7 @@ public abstract class AbstractHttpResponse implements IHttpResponse {
 	protected String phrase;
 	protected Map<String, String> header;
 	protected File file;
+	protected String connection;
 	protected long expiresAt = -1;
 	
 	public static File createTempResponseFile() {
@@ -60,6 +61,67 @@ public abstract class AbstractHttpResponse implements IHttpResponse {
 			e.printStackTrace();
 		}
 		return tempFile;
+	}
+	
+
+	/**
+	 * Tells if code is error.
+	 * 
+	 * @return is error
+	 */
+	public boolean isError() {
+		return code >= 400;
+	}
+
+	/**
+	 * Maps a key to value in the header map.
+	 * @param key A key, e.g. "Host"
+	 * @param value A value, e.g. "www.rose-hulman.edu"
+	 */
+	public void put(String key, String value) {
+		this.header.put(key, value);
+	}
+		
+	/**
+	 * @param out
+	 */
+	protected void writeGenericHeader(OutputStream out) {
+		// First status line
+		String line = version + Protocol.SPACE + code + Protocol.SPACE + phrase + Protocol.CRLF;
+		try {
+			out.write(line.getBytes());		
+			// Write header fields if there is something to write in header field
+			if(header != null && !header.isEmpty()) {
+				for(Map.Entry<String, String> entry : header.entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
+					
+					// Write each header field line
+					line = key + Protocol.SEPERATOR + Protocol.SPACE + value + Protocol.CRLF;
+					out.write(line.getBytes());
+				}
+			}
+		
+			// Write a blank line
+			out.write(Protocol.CRLF.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void fillGeneralHeader() {
+		// Lets add Connection header
+		put(Protocol.CONNECTION, connection);
+
+		// Lets add current date
+		Date date = Calendar.getInstance().getTime();
+		put(Protocol.DATE, date.toString());
+		
+		// Lets add server info
+		put(Protocol.Server, Protocol.getServerInfo());
+
+		// Lets add extra header with provider info
+		put(Protocol.PROVIDER, Protocol.AUTHOR);
 	}
 	
 	/**
@@ -90,13 +152,8 @@ public abstract class AbstractHttpResponse implements IHttpResponse {
 		this.version = version;
 	}
 	
-	/**
-	 * Tells if code is error.
-	 * 
-	 * @return is error
-	 */
-	public boolean isError() {
-		return code >= 400;
+	public void setConnection(String connection) {
+		this.connection = connection;
 	}
 	
 	/**
@@ -141,57 +198,6 @@ public abstract class AbstractHttpResponse implements IHttpResponse {
 	public Map<String, String> getHeader() {
 		// Lets return the unmodifable view of the header map
 		return Collections.unmodifiableMap(header);
-	}
-
-	/**
-	 * Maps a key to value in the header map.
-	 * @param key A key, e.g. "Host"
-	 * @param value A value, e.g. "www.rose-hulman.edu"
-	 */
-	public void put(String key, String value) {
-		this.header.put(key, value);
-	}
-		
-	/**
-	 * @param out
-	 */
-	protected void writeGenericHeader(OutputStream out) {
-		// First status line
-		String line = version + Protocol.SPACE + code + Protocol.SPACE + phrase + Protocol.CRLF;
-		try {
-			out.write(line.getBytes());		
-			// Write header fields if there is something to write in header field
-			if(header != null && !header.isEmpty()) {
-				for(Map.Entry<String, String> entry : header.entrySet()) {
-					String key = entry.getKey();
-					String value = entry.getValue();
-					
-					// Write each header field line
-					line = key + Protocol.SEPERATOR + Protocol.SPACE + value + Protocol.CRLF;
-					out.write(line.getBytes());
-				}
-			}
-		
-			// Write a blank line
-			out.write(Protocol.CRLF.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void fillGeneralHeader(String connection) {
-		// Lets add Connection header
-		put(Protocol.CONNECTION, connection);
-
-		// Lets add current date
-		Date date = Calendar.getInstance().getTime();
-		put(Protocol.DATE, date.toString());
-		
-		// Lets add server info
-		put(Protocol.Server, Protocol.getServerInfo());
-
-		// Lets add extra header with provider info
-		put(Protocol.PROVIDER, Protocol.AUTHOR);
 	}
 	
 	@Override

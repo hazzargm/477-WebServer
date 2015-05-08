@@ -54,7 +54,7 @@ public class ReadAction extends AbstractRequestAction {
 	public IHttpResponse performAction() {				
 		// Lets fill up header fields with more information
 //		response.fillGeneralHeader(Protocol.CLOSE);//TODO FIXME
-		response.fillGeneralHeader("keep-alive");
+		response.fillGeneralHeader();
 
 		// Lets add last modified date for the file
 		long timeSinceEpoch = file.lastModified();

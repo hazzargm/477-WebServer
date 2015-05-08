@@ -67,6 +67,7 @@ public class Response200OK extends AbstractHttpResponse {
 	 */
 	@Override
 	public void write(OutputStream out) {
+		System.out.println(this.toString());
 		if(file == null) {
 			// Create type ErrorResponse and verify that the response is not an error
 			file = AbstractHttpResponse.createTempResponseFile();
@@ -101,8 +102,7 @@ public class Response200OK extends AbstractHttpResponse {
 			int bytesRead = 0;
 			// While there is some bytes to read from file, read each chunk and send to the socket out stream
 			while((bytesRead = inStream.read(buffer)) != -1) { 
-				out.write(buffer, 0, bytesRead);//TODO
-				System.out.println(new String(buffer));
+				out.write(buffer, 0, bytesRead);
 			}
 			// Close the file input stream, we are done reading
 			inStream.close();
