@@ -370,7 +370,7 @@ public class HttpClient extends javax.swing.JFrame {
         String host = this.txtServer.getText(); // + ":" + this.txtPort.getText();
         
         buffer.append("Host: " + host + "\r\n");
-        buffer.append("Connection: Close\r\n");
+        buffer.append("Connection: Keep-Alive\r\n");
         buffer.append("User-Agent: HttpTestClient/1.0\r\n");
         buffer.append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n");
         buffer.append("Accept-Language: en-US,en;q=0.8\r\n");

@@ -66,7 +66,7 @@ public class Response200OK extends AbstractHttpResponse {
 	 * @see edu.rosehulman.sws.protocol.IHTTPResponse#write(java.io.OutputStream)
 	 */
 	@Override
-	public void write(OutputStream outStream) {
+	public void write(OutputStream out) {
 		if(file == null) {
 			// Create type ErrorResponse and verify that the response is not an error
 			file = AbstractHttpResponse.createTempResponseFile();
@@ -88,7 +88,6 @@ public class Response200OK extends AbstractHttpResponse {
 		
 		
 		// Write headers
-		BufferedOutputStream out = new BufferedOutputStream(outStream, Protocol.CHUNK_LENGTH);
 		writeGenericHeader(out);
 		
 		// We are reading a file
@@ -101,14 +100,14 @@ public class Response200OK extends AbstractHttpResponse {
 			byte[] buffer = new byte[Protocol.CHUNK_LENGTH];
 			int bytesRead = 0;
 			// While there is some bytes to read from file, read each chunk and send to the socket out stream
-			while((bytesRead = inStream.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
+			while((bytesRead = inStream.read(buffer)) != -1) { 
+				out.write(buffer, 0, bytesRead);//TODO
 			}
 			// Close the file input stream, we are done reading
 			inStream.close();
 				
 			// Flush the data so that outStream sends everything through the socket 
-			out.flush();
+			//out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

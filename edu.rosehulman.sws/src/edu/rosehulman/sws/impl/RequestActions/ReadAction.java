@@ -53,7 +53,9 @@ public class ReadAction extends AbstractRequestAction {
 	@Override
 	public IHttpResponse performAction() {				
 		// Lets fill up header fields with more information
-		response.fillGeneralHeader(Protocol.CLOSE);
+//		response.fillGeneralHeader(Protocol.CLOSE);//TODO FIXME
+		response.fillGeneralHeader("keep-alive");
+
 		// Lets add last modified date for the file
 		long timeSinceEpoch = file.lastModified();
 		Date modifiedTime = new Date(timeSinceEpoch);
@@ -72,9 +74,7 @@ public class ReadAction extends AbstractRequestAction {
 		if(mime != null) { 
 			response.put(Protocol.CONTENT_TYPE, mime);
 		}
-		
-		System.out.println(response);
-		
+				
 		return response;
 	}
 	

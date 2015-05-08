@@ -155,7 +155,7 @@ public abstract class AbstractHttpResponse implements IHttpResponse {
 	/**
 	 * @param out
 	 */
-	protected void writeGenericHeader(BufferedOutputStream out) {
+	protected void writeGenericHeader(OutputStream out) {
 		// First status line
 		String line = version + Protocol.SPACE + code + Protocol.SPACE + phrase + Protocol.CRLF;
 		try {

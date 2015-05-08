@@ -160,16 +160,10 @@ public class Server implements Runnable {
 				if(this.stop)
 					break;
 				
-//				if(connectionMap.containsKey(connectionSocket.getInetAddress())) {
-//					new Thread(connectionMap.get(connectionSocket.getInetAddress())).start();
-//				} else {
 					// Create a handler for this incoming connection and start the handler in a new thread
 					ConnectionHandler handler = new ConnectionHandler(this, connectionSocket);
-//					connectionMap.put(connectionSocket.getInetAddress(), handler);
-//					System.out.println(connectionSocket.getInetAddress() + "---------" + handler);
-//					System.out.println("Creating Connection Handler");
+					System.out.println("Creating Connection Handler");
 					new Thread(handler).start();
-//				}
 			}
 			this.welcomeSocket.close();
 		}

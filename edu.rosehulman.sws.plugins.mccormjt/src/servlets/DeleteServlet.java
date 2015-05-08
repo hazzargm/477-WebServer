@@ -18,7 +18,6 @@ public class DeleteServlet extends AbstractServlet implements IServlet {
 	public void serve() {
 		List<String> urlParts = Arrays.asList(this.request.getUri().split("/"));
 		String newUri = urlParts.get(1) + "/" + StringUtils.join(urlParts.subList(3, urlParts.size()), "/");
-		System.out.println("URI - " + newUri);
 		this.request.setUri(newUri);
 		this.request.handleRequest();
 	}

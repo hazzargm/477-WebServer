@@ -88,7 +88,7 @@ public class Protocol {
      * into number of small chunk of bytes and send each chunk to the socket to 
      * utilize the memory better.
      */
-    public static final int CHUNK_LENGTH = 4096; // 4KB
+    public static final int CHUNK_LENGTH = 5; // 4KB
     
     // Server information that we want to send in "Server:" header field
     public static final String SERVER_INFO = "SimpleWebServer(SWS)/1.0.0";
