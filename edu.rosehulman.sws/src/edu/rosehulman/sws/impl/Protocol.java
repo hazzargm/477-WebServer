@@ -62,7 +62,10 @@ public class Protocol {
     
     public static final int NOT_SUPPORTED_CODE = 505;
     public static final String NOT_SUPPORTED_TEXT = "HTTP Version Not Supported";
-
+    
+    public static final int UNAUTHORIZED_CODE = 401;
+    public static final String UNAUTHORIZED_TEXT = "Unauthorized";
+    
     // Some useful header elements in request
     public static final String HOST = "Host";
     public static final String CONNECTION = "Connection";
@@ -98,6 +101,8 @@ public class Protocol {
     public static final String OPEN = "Keep-Alive";
     public static final String DEFAULT_FILE = "index.html";
     public static final String MIME_TEXT = "text";
+	public static final Object AUTHORIZATION = "authorization";
+	public static final String AUTHORIZATION_SEPERATOR = ":";
     
     /**
      * Returns a formatted String containing server information.<br/>

@@ -35,6 +35,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import edu.rosehulman.sws.gui.SpringUtilities;
 import edu.rosehulman.sws.impl.Protocol;
 import edu.rosehulman.sws.impl.HTTPResponses.Response200OK;
@@ -103,6 +105,27 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 
 	public char[] getBody() {
 		return body;
+	}
+	
+	/**
+	 * 
+	 * checks given set of credentials
+	 * against requests credentials
+	 * 
+	 * @param username
+	 * @param password
+	 * @return isAuthorized
+	 */
+	public boolean isAuthorizedFor(String username, String password) {
+		String credentials = this.header.get(Protocol.AUTHORIZATION);
+		if (credentials == null) {
+			return false;
+		} else {
+			String[] credentialParts = StringUtils.split(credentials, Protocol.AUTHORIZATION_SEPERATOR);
+			String requestUsername = credentialParts[0];
+			String requestPassword = credentialParts[1];
+			return username.equals(requestUsername) && password.equals(requestPassword);
+		}
 	}
 	
 	public OutputStream getClientOutputStream() {

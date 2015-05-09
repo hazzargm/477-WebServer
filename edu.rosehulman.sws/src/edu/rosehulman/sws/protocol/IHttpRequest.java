@@ -52,4 +52,5 @@ public interface IHttpRequest {
 	public Server getServer();
 	public void setServer(Server server);
 	public abstract IHttpResponse getResponse();
+	public boolean isAuthorizedFor(String username, String password);
 }

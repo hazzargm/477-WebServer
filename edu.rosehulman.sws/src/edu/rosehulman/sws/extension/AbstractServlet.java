@@ -31,6 +31,7 @@ package edu.rosehulman.sws.extension;
 import java.io.PrintWriter;
 
 import edu.rosehulman.sws.impl.Protocol;
+import edu.rosehulman.sws.impl.HTTPResponses.Response401Unauthorized;
 import edu.rosehulman.sws.protocol.IHttpRequest;
 import edu.rosehulman.sws.protocol.IHttpResponse;
 
@@ -42,17 +43,65 @@ public abstract class AbstractServlet implements IServlet {
 	protected IHttpRequest request;
 	protected IHttpResponse response;
 	protected PrintWriter writer;
+	private String username;
+	private String password;
 	
 	public void process(IHttpRequest request, IHttpResponse response) {
 		this.request = request;
 		this.response = response;
-        response.put(Protocol.CONTENT_TYPE, ("text/html;charset=UTF-8"));
-        this.writer = new PrintWriter(request.getClientOutputStream());
-        serve();
-        this.writer.close();
+		
+		if (isAuthorized()) {
+	        response.put(Protocol.CONTENT_TYPE, ("text/html;charset=UTF-8"));
+	        this.writer = new PrintWriter(request.getClientOutputStream());
+	        serve();
+	        this.writer.close();
+		} else {
+			response = new Response401Unauthorized(request.getVersion(), null);
+			try {
+				response.write(request.getClientOutputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
     }
 	
 	public IServlet getIServlet() {
 		return this;
+	}
+	
+	private boolean isAuthorized() {
+		if (!(getUsername() == null || getPassword() == null)) {
+			return request.isAuthorizedFor(getUsername(), getPassword());
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
