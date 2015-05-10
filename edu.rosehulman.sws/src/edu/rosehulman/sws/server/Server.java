@@ -53,6 +53,8 @@ public class Server implements Runnable {
 	private ServerCache cache;
 	private WebServer window;
 	
+	private File pluginDir;
+	
 	private Map<InetAddress, ConnectionHandler> connectionMap;
 	
 	private ArrayList<Exception> exceptions; //TODO
@@ -78,7 +80,52 @@ public class Server implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public Server() {
+		this.rootDirectory = System.getProperty("user.dir") + File.separator + "web";
+		this.port = 8080;
+		this.stop = false;
+		this.connections = 0;
+		this.serviceTime = 0;
+		this.cache = new ServerCache();
+		this.plugins = new HashMap<String, IPlugin>();
+		this.connectionMap = new HashMap<InetAddress, ConnectionHandler>();
+		this.exceptions = new ArrayList<Exception>();
+		pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
+		try {
+			loader = new PluginLoader(this, pluginDir);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Server(String rootDirectory, int port, String pluginDirectory) {
+		this.rootDirectory = rootDirectory;
+		this.port = port;
+		this.stop = false;
+		this.connections = 0;
+		this.serviceTime = 0;
+		this.cache = new ServerCache();
+		this.plugins = new HashMap<String, IPlugin>();
+		this.connectionMap = new HashMap<InetAddress, ConnectionHandler>();
+		this.exceptions = new ArrayList<Exception>();
+		pluginDir = new File(pluginDirectory);// System.getProperty("user.dir") + File.separator + "plugins");
+		try {
+			loader = new PluginLoader(this, pluginDir);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		Server server;
+		if(args.length > 1) {
+			server = new Server(args[0], Integer.parseInt(args[1]), args[2]);
+		} else {
+			server = new Server();
+		}
+		new Thread(server).start();
 	}
 	
 	// Get the current server epoch time
@@ -152,7 +199,7 @@ public class Server implements Runnable {
 			
 			// Now keep welcoming new connections until stop flag is set to true
 			while(true) {
-				
+				System.out.println("waiting for connections");
 				// Listen for incoming socket connection
 				// This method block until somebody makes a request
 				Socket connectionSocket = this.welcomeSocket.accept();
@@ -168,7 +215,7 @@ public class Server implements Runnable {
 			this.welcomeSocket.close();
 		}
 		catch(Exception e) {
-			window.showSocketException(e);
+			//window.showSocketException(e);
 		}
 	}
 	
