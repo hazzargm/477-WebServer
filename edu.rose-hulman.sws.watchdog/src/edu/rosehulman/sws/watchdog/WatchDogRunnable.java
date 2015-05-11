@@ -1,4 +1,4 @@
-package edu.rose-hulman.sws.watchdog;
+package edu.rosehulman.sws.watchdog;
 
 import java.util.Scanner;
 
