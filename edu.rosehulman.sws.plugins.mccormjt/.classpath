@@ -3,6 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="src" path="/edu.rosehulman.sws"/>
-	<classpathentry kind="lib" path="C:/Users/hazzargm/Documents/Senior Year/Spring/CSSE 477/477-WebServer/edu.rosehulman.sws.plugins.mccormjt/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
