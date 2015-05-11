@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class WatchDog {
 
-	public static final String serverFilepath = System.getProperty("user.dir") + File.separator + "server" + File.separator + "server2.jar";
+	public static final String serverFilepath = System.getProperty("user.dir") + File.separator + "server" + File.separator + "webserver.jar";
 	public static final String rootDirFilepath = System.getProperty("user.dir") + File.separator + "web";
 	public static final String port = "8080";
 	public static final String pluginDirFilepath = System.getProperty("user.dir") + File.separator + "plugins";
