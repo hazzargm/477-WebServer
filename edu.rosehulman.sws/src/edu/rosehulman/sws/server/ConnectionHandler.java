@@ -58,17 +58,35 @@ public class ConnectionHandler implements Runnable {
 	private long lastServiceTime;
 	private long totalServiceTime;
 	private double avgRespTime;
+	private long createdAtTime;
+	private boolean isBadConnection = false;
 	
 	public ConnectionHandler(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
 		this.serverCahce = server.getCache();
 		
+		createdAtTime = Server.getCurrentTime();
 		reqsReceived = 0;
 		reqsServed = 0;
 		lastServiceTime = 0;
 		totalServiceTime = 0;
 		avgRespTime = 0;
+	}
+	
+	public void setBadConnection(boolean isBad) {
+		isBadConnection = isBad;
+	}
+	
+	// get address of the client
+	public String getAddress() {
+		return this.socket.getInetAddress().toString();
+	}
+	
+	
+	// get how long connection has been alive
+	public long getAge() {
+		return Server.getCurrentTime() - createdAtTime;
 	}
 
 	/**
@@ -93,6 +111,17 @@ public class ConnectionHandler implements Runnable {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		if (isBadConnection ) {
+			System.out.println("Connections Is Bad!!!");
+			IHttpResponse errorResponse = new Response500InternalServiceError(Protocol.VERSION, AbstractHttpResponse.createTempResponseFile());
+			try {
+				errorResponse.write(outStream);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			return;
 		}
 		
 		// At this point we have the input and output stream of the socket
@@ -120,8 +149,16 @@ public class ConnectionHandler implements Runnable {
 					reqsReceived++;
 					keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals("keep-alive");
 					System.out.println("Pre-Response: Keep-Alive = " + keep_alive);
-				} catch (Exception e) {
-					e.printStackTrace(); //TODO this is a socket exception when the client unexpectedly closes a keep-alive connection
+				} catch (SocketException e) {
+					// this is a socket exception when the client unexpectedly closes a keep-alive connection
+					System.out.println("########## SOCKET EXPCEPTION #############");
+					server.getConnectionMonitor().stopMonitoringConnection(this);
+					IHttpResponse okResponse = new Response200OK(Protocol.VERSION, AbstractHttpResponse.createTempResponseFile());
+					try {
+						okResponse.write(outStream);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 					break;
 				}
 				
@@ -153,6 +190,7 @@ public class ConnectionHandler implements Runnable {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+				break;
 			}
 			keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals(Protocol.OPEN.toLowerCase());
 			System.out.println(request.getHeader().get(Protocol.CONNECTION.toLowerCase()));

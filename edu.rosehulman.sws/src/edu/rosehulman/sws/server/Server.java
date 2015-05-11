@@ -55,7 +55,7 @@ public class Server implements Runnable {
 	
 	private File pluginDir;
 	
-	private Map<InetAddress, ConnectionHandler> connectionMap;
+	private ConnectionMonitor connectionMonitor;
 	
 	private ArrayList<Exception> exceptions; //TODO
 	
@@ -72,7 +72,7 @@ public class Server implements Runnable {
 		this.window = window;
 		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
-		this.connectionMap = new HashMap<InetAddress, ConnectionHandler>();
+		this.connectionMonitor = new ConnectionMonitor();
 		this.exceptions = new ArrayList<Exception>();
 		File pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
 		try {
@@ -90,7 +90,7 @@ public class Server implements Runnable {
 		this.serviceTime = 0;
 		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
-		this.connectionMap = new HashMap<InetAddress, ConnectionHandler>();
+		this.connectionMonitor = new ConnectionMonitor();
 		this.exceptions = new ArrayList<Exception>();
 		pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
 		try {
@@ -108,7 +108,7 @@ public class Server implements Runnable {
 		this.serviceTime = 0;
 		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
-		this.connectionMap = new HashMap<InetAddress, ConnectionHandler>();
+		this.connectionMonitor = new ConnectionMonitor();
 		this.exceptions = new ArrayList<Exception>();
 		pluginDir = new File(pluginDirectory);// System.getProperty("user.dir") + File.separator + "plugins");
 		try {
@@ -209,7 +209,7 @@ public class Server implements Runnable {
 				
 					// Create a handler for this incoming connection and start the handler in a new thread
 					ConnectionHandler handler = new ConnectionHandler(this, connectionSocket);
-					System.out.println("Creating Connection Handler");
+					handler.setBadConnection(!connectionMonitor.monitor(handler));
 					new Thread(handler).start();
 			}
 			this.welcomeSocket.close();
@@ -287,5 +287,9 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		}
 		System.out.println("-------------------------------------");
+	}
+	
+	public ConnectionMonitor getConnectionMonitor() {
+		return connectionMonitor;
 	}
 }
