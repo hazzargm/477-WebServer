@@ -73,6 +73,7 @@ public class Server implements Runnable {
 		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
 		this.connectionMonitor = new ConnectionMonitor();
+		new Thread(new ConnectionMonitorRunnable(connectionMonitor)).start();
 		this.exceptions = new ArrayList<Exception>();
 		File pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
 		try {
@@ -91,6 +92,7 @@ public class Server implements Runnable {
 		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
 		this.connectionMonitor = new ConnectionMonitor();
+		new Thread(new ConnectionMonitorRunnable(connectionMonitor)).start();
 		this.exceptions = new ArrayList<Exception>();
 		pluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
 		try {
@@ -109,6 +111,7 @@ public class Server implements Runnable {
 		this.cache = new ServerCache();
 		this.plugins = new HashMap<String, IPlugin>();
 		this.connectionMonitor = new ConnectionMonitor();
+		new Thread(new ConnectionMonitorRunnable(connectionMonitor)).start();
 		this.exceptions = new ArrayList<Exception>();
 		pluginDir = new File(pluginDirectory);// System.getProperty("user.dir") + File.separator + "plugins");
 		try {

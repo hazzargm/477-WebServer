@@ -55,14 +55,14 @@ public class BruteForceAttack extends DOSAttack {
 			public void run() {
 				long start = System.currentTimeMillis();
 				
-//				Socket socket = null; //TODO
-//				try {
-//					// Open socket connection to the server
-//					socket = new Socket(host, port);
-//				}
-//				catch(Exception e) {
-//					fireDOSExceptionEvent(e);
-//				}
+				Socket socket = null; //TODO
+				try {
+					// Open socket connection to the server
+					socket = new Socket(host, port);
+				}
+				catch(Exception e) {
+					fireDOSExceptionEvent(e);
+				}
 
 				if(socket != null) {
 					// Use random index to avoid uniform pattern of http request

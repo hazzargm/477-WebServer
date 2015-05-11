@@ -28,6 +28,7 @@
  
 package edu.rosehulman.sws.server;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +41,7 @@ import java.util.PriorityQueue;
 public class ConnectionMonitor {
 	
 	public static int MAX_CLIENT_CONNECTIONS = 10;
+	public static int MAX_CONNECTION_AGE = 3000;
 	
 	private Map<String, PriorityQueue<ConnectionHandler>> connections;
 	private ConnectionComparator connectionComparator;
@@ -47,6 +49,14 @@ public class ConnectionMonitor {
 	public ConnectionMonitor() {
 		connectionComparator = new ConnectionComparator();
 		connections = new HashMap<String, PriorityQueue<ConnectionHandler>>();
+	}
+	
+	public void removeOldConnections() {
+		for (PriorityQueue<ConnectionHandler> c : connections.values()) {
+			if (c.size() > 0 && c.element().getAge() >= MAX_CONNECTION_AGE) {
+				stopMonitoringConnection(c.element());
+			}
+		}
 	}
 	
 	/**
@@ -80,6 +90,12 @@ public class ConnectionMonitor {
 	public void stopMonitoringConnection(ConnectionHandler c) {
 		System.out.println("Stopped Monitoring Connection For: " + c.getAddress());
 		PriorityQueue<ConnectionHandler> connectionQueue = connections.get(c.getAddress());
+		try {
+			c.getSocket().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		if (connectionQueue == null) return;
 		connectionQueue.remove(c);
 	}

@@ -31,9 +31,7 @@ package edu.rosehulman.sws.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 
 import edu.rosehulman.sws.extension.IPlugin;
 import edu.rosehulman.sws.impl.Protocol;
@@ -42,7 +40,6 @@ import edu.rosehulman.sws.impl.HTTPResponses.Response500InternalServiceError;
 import edu.rosehulman.sws.protocol.AbstractHttpResponse;
 import edu.rosehulman.sws.protocol.IHttpRequest;
 import edu.rosehulman.sws.protocol.IHttpResponse;
-import edu.rosehulman.sws.protocol.ProtocolException;
 
 /**
  * 
@@ -149,16 +146,10 @@ public class ConnectionHandler implements Runnable {
 					reqsReceived++;
 					keep_alive = request.getHeader().get(Protocol.CONNECTION.toLowerCase()).equals("keep-alive");
 					System.out.println("Pre-Response: Keep-Alive = " + keep_alive);
-				} catch (SocketException e) {
+				} catch (Exception e) {
 					// this is a socket exception when the client unexpectedly closes a keep-alive connection
 					System.out.println("########## SOCKET EXPCEPTION #############");
 					server.getConnectionMonitor().stopMonitoringConnection(this);
-					IHttpResponse okResponse = new Response200OK(Protocol.VERSION, AbstractHttpResponse.createTempResponseFile());
-					try {
-						okResponse.write(outStream);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
 					break;
 				}
 				

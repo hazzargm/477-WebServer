@@ -40,7 +40,7 @@ public abstract class DOSAttack implements Runnable {
 	protected String[] uris;
 	protected int threadPool;
 	protected int taskPerSecond;
-	protected Socket socket;
+//	protected Socket socket;
 	
 	private ArrayList<DOSListener> listeners;
 	private boolean stop;
@@ -49,13 +49,13 @@ public abstract class DOSAttack implements Runnable {
 		this.host = host;
 		this.port = port;
 		
-		//REMOVE THIS CODE AND COMMENT BACK IN BruteForceAttackCode for multiple connections
-		try {
-			this.socket = new Socket(host, port);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		//REMOVE THIS CODE AND COMMENT BACK IN BruteForceAttackCode for multiple connections
+//		try {
+//			this.socket = new Socket(host, port);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		this.uris = uris;
 		this.threadPool = threadPool;
 		this.taskPerSecond = taskPerSecond;
