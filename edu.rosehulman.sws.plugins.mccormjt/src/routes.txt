@@ -6,3 +6,7 @@ POST	/form/result				servlets.FormResultServlet
 DELETE  /delete						servlets.DeleteServlet
 PUT     /update						servlets.PutServlet
 GET     /secret						servlets.SecretServlet
+GET     /users/all					servlets.AllUsersServlet
+POST    /users/create				servlets.CreateUserServlet
+PUT     /users/update				servlets.CreateUserServlet
+DELETE  /users/delete				servlets.DeleteUserServlet

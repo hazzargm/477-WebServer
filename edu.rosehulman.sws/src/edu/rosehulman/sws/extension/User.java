@@ -1,6 +1,6 @@
 /*
- * IServlet.java
- * Apr 30, 2015
+ * Users.java
+ * May 11, 2015
  *
  * Simple Web Server (SWS) for EE407/507 and CS455/555
  * 
@@ -28,15 +28,59 @@
  
 package edu.rosehulman.sws.extension;
 
-import edu.rosehulman.sws.protocol.IHttpRequest;
-import edu.rosehulman.sws.protocol.IHttpResponse;
+import java.util.UUID;
 
 /**
  * 
  * @author Chandan R. Rupakheti (rupakhcr@clarkson.edu)
  */
-public interface IServlet {
-	public void process(IHttpRequest request, IHttpResponse response);
-	public void serve();
-	public void setPlugin(IPlugin plugin);
+public class User {
+	private String name;
+	private int age;
+	private String id;
+	
+	public User(String name, int age) {	
+		setName(name);
+		setAge(age);
+		id = UUID.randomUUID().toString();
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return the age
+	 */
+	public int getAge() {
+		return age;
+	}
+	/**
+	 * @param age the age to set
+	 */
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id2
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
 }

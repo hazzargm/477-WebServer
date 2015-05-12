@@ -223,9 +223,13 @@ public class URLParser {
 		Map<String, String> parameters = new HashMap<String, String>();
 		String[] params = charArrayToString(postBody).split("&");
 		String[] pairs;
+		String key, value;
+		
 		for(String s: params) {
 			pairs = s.split("=");
-			parameters.put(pairs[0], pairs[1]);
+			key = pairs[0];
+			value = pairs.length > 1 ? pairs[1] : "";
+			parameters.put(key, value);
 		}
 		return parameters;
 	}

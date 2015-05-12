@@ -28,6 +28,8 @@
  
 package edu.rosehulman.sws.extension;
 
+import java.util.Map;
+
 import edu.rosehulman.sws.protocol.IHttpRequest;
 import edu.rosehulman.sws.protocol.IHttpResponse;
 
@@ -42,4 +44,5 @@ public interface IPlugin {
 	public void loadServlets(String rootDir);
 	public String getDomain();
 	public IPlugin getPlugin();
+	public Map<String, User> getUsers();
 }

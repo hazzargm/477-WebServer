@@ -1,5 +1,6 @@
 import edu.rosehulman.sws.extension.AbstractPlugin;
 import edu.rosehulman.sws.extension.IPlugin;
+import edu.rosehulman.sws.extension.User;
 
 /*
  * mccormjt.java
@@ -39,5 +40,19 @@ public class PluginMccormjt extends AbstractPlugin implements IPlugin {
 	public PluginMccormjt() {
 		super();
 		this.domain = "mccormjt";
+		initUserDatabase();
+	}
+	
+	private void initUserDatabase() {
+		User[] userList = new User[]{
+			new User("John", 22),
+			new User("Gordon", 23),
+			new User("Chandan", 35),
+			new User("SteveJobs", 66)
+		};
+		
+		for (User u : userList) {
+			users.put(u.getId(), u);
+		}
 	}
 }

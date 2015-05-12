@@ -58,9 +58,15 @@ public abstract class AbstractPlugin implements IPlugin {
 	protected String domain = ""; //This will be some constant in all concrete plugin implementations
 	protected Map<String, IServlet> servletMap;
 	protected String servletDir;
+	protected Map<String, User> users;
 	
 	public AbstractPlugin() {
+		users = new HashMap<String, User>();
 		loadServlets("servlets");
+	}
+	
+	public Map<String, User> getUsers() {
+		return users;
 	}
 	
 	public static String getServeltRouteKey(String method, String uri) {
@@ -72,7 +78,7 @@ public abstract class AbstractPlugin implements IPlugin {
 		System.out.println("LOAD SERVLETS");
 		
 		// lookup route file for specific plugin domain
-		InputStream in = getClass().getResourceAsStream(IPlugin.ROUTE_FILE_NAME); 
+		InputStream in = getClass().getResourceAsStream(File.separator+IPlugin.ROUTE_FILE_NAME); 
 		this.servletMap = new HashMap<String, IServlet>();
 		 
 		try {
@@ -110,6 +116,7 @@ public abstract class AbstractPlugin implements IPlugin {
 			Constructor<?> servletConstructor = servletClass.getConstructor();
 			Object servletObj = servletConstructor.newInstance();
 			IServlet servlet = (IServlet) servletObj;
+			servlet.setPlugin(this);
 			this.servletMap.put(routeKey, servlet);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

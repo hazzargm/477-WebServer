@@ -12,7 +12,6 @@ import edu.rosehulman.sws.extension.IServlet;
 public class DeleteServlet extends AbstractServlet implements IServlet {
 	
 	public DeleteServlet() {
-		
 	}
 
 	public void serve() {

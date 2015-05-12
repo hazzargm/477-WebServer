@@ -45,6 +45,7 @@ public abstract class AbstractServlet implements IServlet {
 	protected PrintWriter writer;
 	private String username;
 	private String password;
+	private IPlugin plugin;
 	
 	public void process(IHttpRequest request, IHttpResponse response) {
 		this.request = request;
@@ -103,5 +104,19 @@ public abstract class AbstractServlet implements IServlet {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	/**
+	 * @return the plugin
+	 */
+	public IPlugin getPlugin() {
+		return plugin;
+	}
+
+	/**
+	 * @param plugin the plugin to set
+	 */
+	public void setPlugin(IPlugin plugin) {
+		this.plugin = plugin;
 	}
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>User List</title>
+  <link href='/bootstrap.css' rel='stylesheet' />
+  <link href='/mccormjt/users/users.css' rel='stylesheet' />
+</head>
+
+<body>
+  <h1>User Age List</h1>
+
+  <form class='user' method='post' action='/mccormjt/users/create'>
+    <div class="form-group">
+      <input class='form-control name' name='name' type='text' placeholder='Name' required />
+      <input class='form-control age' name='age'  type='text' placeholder='Age'  required />
+      <button class='btn btn-success'>+New</button>
+    </div>
+  <form>
+
+  <hr/>
+
+  <table class="table table-striped" id='users'>
+  </table>
+
+  <script src='/jquery.js' type="text/javascript"></script>
+  <script src='/mccormjt/users/users.js' type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+body {
+  text-align: center;
+  padding: 25px;
+}
+
+form {
+  padding: 25px;
+  margin: 25px;
+  width: 60%;
+  margin: auto;
+}
+
+form .form-control {
+  width: 200px;
+  display: inline;
+}
+
+hr {
+  margin: 25px;
+}
+
+th {
+  text-align: center;
+}
+
+#users tr.old {
+  background-color: darkred;
+}
+
+#users td:last-child {
+  padding: 30px
+  font-family: sans-serif;
+  font-weight: 500;
+  color: red;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+
+#users td:last-child:hover {
+  color: black;
+}
+
+.no-users {
+  font-weight: 500;
+  color: red;
+  text-align: center;
+}
