@@ -7,6 +7,7 @@ DELETE  /delete						servlets.DeleteServlet
 PUT     /update						servlets.PutServlet
 GET     /secret						servlets.SecretServlet
 GET     /users/all					servlets.AllUsersServlet
+GET     /user                       servlets.GetUserServlet
 POST    /users/create				servlets.CreateUserServlet
 PUT     /users/update				servlets.CreateUserServlet
 DELETE  /users/delete				servlets.DeleteUserServlet

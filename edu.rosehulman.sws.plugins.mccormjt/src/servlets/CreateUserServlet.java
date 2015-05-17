@@ -22,6 +22,6 @@ public class CreateUserServlet extends AbstractServlet implements IServlet {
 			user.setId(id);
 		}
 		this.getPlugin().getUsers().put(user.getId(), user);
-		this.writer.write("success");
+		this.writer.write(user.getId());
 	}
 }
