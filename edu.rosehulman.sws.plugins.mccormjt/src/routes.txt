@@ -11,3 +11,4 @@ GET     /user                       servlets.GetUserServlet
 POST    /users/create				servlets.CreateUserServlet
 PUT     /users/update				servlets.CreateUserServlet
 DELETE  /users/delete				servlets.DeleteUserServlet
+GET     /users/count				servlets.CountUsersServlet
